@@ -1,0 +1,27 @@
+{
+    "documents": [
+      {
+        "id": 1,
+        "docNumber": "425",
+        "receivedDate": "2024-06-12",
+        "issuedDate": "2024-06-10",
+        "referenceNumber": "2901/NV",
+        "author": "Department of Internal Affairs",
+        "summary": "Regarding feedback on the draft proposal...",
+        "priority": "Normal",
+        "dueDate": "2024-06-17"
+      },
+      {
+        "id": 2,
+        "docNumber": "426",
+        "receivedDate": "2024-06-13",
+        "issuedDate": "2024-06-11",
+        "referenceNumber": "2902/NV",
+        "author": "Department of Education",
+        "summary": "Guidance on organizing competitions...",
+        "priority": "Urgent",
+        "dueDate": "2024-06-15"
+      }
+    ]
+  }
+  
