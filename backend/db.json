@@ -2,26 +2,87 @@
     "documents": [
       {
         "id": 1,
-        "docNumber": "425",
+        "documentNumber": "1",
         "receivedDate": "2024-06-12",
         "issuedDate": "2024-06-10",
         "referenceNumber": "2901/NV",
         "author": "Department of Internal Affairs",
         "summary": "Regarding feedback on the draft proposal...",
         "priority": "Normal",
-        "dueDate": "2024-06-17"
+        "dueDate": "2024-06-17",
+        "type": "Paper",
+        "receivingMethod": "Paper letter",
+        "attachments": ["name-of-word-file", "name-of-excel-file"],
+        "processingOpinion": "Adding some comments",
+        "status": ""
       },
       {
         "id": 2,
-        "docNumber": "426",
+        "documentNumber": "2",
         "receivedDate": "2024-06-13",
         "issuedDate": "2024-06-11",
         "referenceNumber": "2902/NV",
         "author": "Department of Education",
         "summary": "Guidance on organizing competitions...",
         "priority": "Urgent",
-        "dueDate": "2024-06-15"
+        "dueDate": "2024-06-15",
+        "type": "Plan",
+        "receivingMethod": "Electronic letter",
+        "attachments": ["name-of-word-file", "name-of-excel-file"],
+        "processingOpinion": "Adding some comments",
+        "status": ""
+      },
+      {
+        "id": 3,
+        "documentNumber": "3",
+        "receivedDate": "2024-06-13",
+        "issuedDate": "2024-06-11",
+        "referenceNumber": "2902/NV",
+        "author": "Department of Education",
+        "summary": "Guidance on organizing competitions...",
+        "priority": "Urgent",
+        "dueDate": "2024-06-15",
+        "type": "Announcement",
+        "receivingMethod": "Paper letter",
+        "attachments": ["name-of-word-file", "name-of-excel-file"],
+        "processingOpinion": "Adding some comments",
+        "status": ""
+      },
+      {
+        "id": 2,
+        "documentNumber": "4",
+        "receivedDate": "2024-06-13",
+        "issuedDate": "2024-06-11",
+        "referenceNumber": "2902/NV",
+        "author": "Department of Education",
+        "summary": "Guidance on organizing competitions...",
+        "priority": "Urgent",
+        "dueDate": "2024-06-15",
+        "type": "Decision",
+        "receivingMethod": "Paper letter",
+        "attachments": ["name-of-word-file", "name-of-excel-file"],
+        "processingOpinion": "Adding some comments",
+        "status": ""
+      },
+      {
+        "id": 2,
+        "documentNumber": "5",
+        "receivedDate": "2024-06-13",
+        "issuedDate": "2024-06-11",
+        "referenceNumber": "2902/NV",
+        "author": "Department of Education",
+        "summary": "Guidance on organizing competitions...",
+        "priority": "Urgent",
+        "dueDate": "2024-06-15",
+        "type": "Report",
+        "receivingMethod": "Paper letter",
+        "attachments": ["name-of-word-file", "name-of-excel-file"],
+        "processingOpinion": "Adding some comments",
+        "status": ""
       }
+    ],
+    "papers": [
+      
     ]
   }
   
