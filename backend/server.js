@@ -1,13 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
-const documentRouter = require("./router/documents-received");
+const incomingDocumentRouter = require("./router/incoming-document");
+const outgoingDocumentRouter = require("./router/outgoing-document");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/documents-receive", documentRouter);
-app.use("/document-sendto");
+app.use("/incoming-documents", incomingDocumentRouter);
+app.use("/outgoing-documents", outgoingDocumentRouter);
 
 // Read database function
 const readDB = () => {
