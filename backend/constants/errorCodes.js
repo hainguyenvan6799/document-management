@@ -9,4 +9,7 @@ const ERROR_CODES = {
   INVALID_STATUS: 'ERR_INVALID_STATUS'
 };
 
-module.exports = ERROR_CODES; 
+const MESSAGE_CODES = {
+  VALIDATION_FAILED: 'Validation Failed'
+}
+module.exports = {ERROR_CODES, MESSAGE_CODES}; 
