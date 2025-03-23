@@ -25,6 +25,13 @@ const router = express.Router();
 // Configure file upload with multer
 const upload = configureStorage('upload/incoming-documents');
 
+router.get("", (_, res) => {
+    const documents = loadDocuments();
+
+    res.status(201).json({ message: 'Get document success', document: documents });
+  }
+);
+
 // 10 is the maximum files
 router.post(
   "/",
@@ -35,7 +42,7 @@ router.post(
     body('referenceNumber').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Reference number is required' }),
     body('author').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Author is required' }),
     body('summary').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Summary is required' }),
-    body('priority').isIn(PRIORITIES).withMessage({ code: ERROR_CODES.INVALID_PRIORITY, message: 'Invalid priority' }),
+    body('priority').isIn(PRIORITIES).withMessage({ code: ERROR_CODES.INVALID_PRIORITY, message: 'Priority must be "Normal" or "Urgent"' }),
     body('dueDate').isISO8601().withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid due date format' }),
     body('type').isIn(DOCUMENT_TYPES).withMessage({ code: ERROR_CODES.INVALID_TYPE, message: 'Invalid type' }),
     body('receivingMethod').isIn(RECEIVING_METHODS).withMessage({ code: ERROR_CODES.INVALID_METHOD, message: 'Invalid receiving method' }),
@@ -73,7 +80,7 @@ router.post(
 );
 
 // Update Document Status API
-router.put(
+router.patch(
   '/:documentNumber/status',
   [body('status').isIn(STATUSES).withMessage({ code: ERROR_CODES.INVALID_STATUS, message: 'Invalid status' })],
   handleValidationErrors,
@@ -95,7 +102,7 @@ router.put(
 );
 
 // Edit Document API
-router.put(
+router.patch(
   '/:documentNumber',
   upload.array('attachments', 10),
   [
