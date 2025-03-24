@@ -12,7 +12,7 @@ const {
   ERROR_CODES
 } = require('../constants');
 const {
-  loadDocuments,
+  loadIncomingDocuments,
   saveDocuments,
   getNextDocumentNumber
 } = require('../utils/database');
@@ -26,7 +26,7 @@ const router = express.Router();
 const upload = configureStorage('upload/incoming-documents');
 
 router.get("", (_, res) => {
-    const documents = loadDocuments();
+    const documents = loadIncomingDocuments();
 
     res.status(201).json({ message: 'Get document success', document: documents });
   }
@@ -53,7 +53,7 @@ router.post(
     console.log('Files received:', req.files);
     console.log('Body received:', req.body);
 
-    const documents = loadDocuments();
+    const documents = loadIncomingDocuments();
 
     const newDocument = {
       id: uuidv4(),
@@ -69,7 +69,7 @@ router.post(
       receivingMethod: req.body.receivingMethod,
       attachments: req.files ? req.files.map(file => file.filename) : [],
       processingOpinion: req.body.processingOpinion,
-      status: "Waiting for processing",
+      status: "Chờ xử lý",
     };
 
     documents.push(newDocument);
@@ -85,7 +85,7 @@ router.patch(
   [body('status').isIn(STATUSES).withMessage({ code: ERROR_CODES.INVALID_STATUS, message: 'Invalid status' })],
   handleValidationErrors,
   (req, res) => {
-    const documents = loadDocuments();
+    const documents = loadIncomingDocuments();
 
     const { documentNumber } = req.params;
     const { status } = req.body;
@@ -120,7 +120,7 @@ router.patch(
   ],
   handleValidationErrors,
   (req, res) => {
-    const documents = loadDocuments();
+    const documents = loadIncomingDocuments();
     const { documentNumber } = req.params;
     const documentIndex = documents.findIndex(doc => doc.documentNumber === documentNumber);
 
@@ -151,5 +151,93 @@ router.get('/attachments/:filename', (req, res) => {
 
   res.download(filePath);
 });
+
+// Search API
+router.get('/search', (req, res) => {
+  const documents = loadIncomingDocuments();
+  
+  const {
+    issuedDateFrom,
+    issuedDateTo,
+    author,
+    referenceNumber,
+    summary,
+    page = 1,
+    pageSize = 2
+  } = req.query;
+
+  console.log('Search params:', req.query);
+  console.log(documents, 999);
+  
+  let filteredDocuments = applyFilters(documents, { author, issuedDateFrom, issuedDateTo, referenceNumber, summary });
+  
+  // Pagination
+  const totalItems = filteredDocuments.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+  const pageNumber = parseInt(page);
+  const limit = parseInt(pageSize);
+  
+  const startIndex = (pageNumber - 1) * limit;
+  const endIndex = pageNumber * limit;
+  
+  const paginatedDocuments = filteredDocuments.slice(startIndex, endIndex);
+  
+  res.status(200).json({
+    message: 'Documents found',
+    data: {
+      documents: paginatedDocuments,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: pageNumber,
+        pageSize: limit
+      }
+    }
+  });
+});
+
+function filterByAuthor(doc, author) {
+  if (!author) return true;
+  return doc.author.toLowerCase().includes(author.toLowerCase());
+}
+
+function parseDate(dateString) {
+  const [day, month, year] = dateString.split('/');
+  return new Date(`${month}/${day}/${year}`);
+}
+
+function filterByDateFrom(doc, issuedDateFrom) {
+  if (!issuedDateFrom) return true;
+  const start = parseDate(issuedDateFrom);
+  const docDate = parseDate(doc.issuedDate);
+  return docDate >= start;
+}
+
+function filterByDateTo(doc, issuedDateTo) {
+  if (!issuedDateTo) return true;
+  const end = parseDate(issuedDateTo);
+  end.setHours(23, 59, 59, 999); // Set to end of day
+  const docDate = parseDate(doc.issuedDate);
+  return docDate <= end;
+}
+
+function filterByReferenceNumber(doc, referenceNumber) {
+  if (!referenceNumber) return true;
+  return doc.referenceNumber.toLowerCase().includes(referenceNumber.toLowerCase());
+}
+
+function filterBySummary(doc, summary) {
+  if (!summary) return true;
+  return doc.summary.toLowerCase().includes(summary.toLowerCase());
+}
+function applyFilters(documents, { author, issuedDateFrom, issuedDateTo, referenceNumber, summary }) {
+  return documents.filter(doc => 
+    filterByAuthor(doc, author) &&
+    filterByDateFrom(doc, issuedDateFrom) &&
+    filterByDateTo(doc, issuedDateTo) &&
+    filterByReferenceNumber(doc, referenceNumber) &&
+    filterBySummary(doc, summary)
+  );
+}
 
 module.exports = router;

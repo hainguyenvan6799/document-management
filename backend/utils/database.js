@@ -5,12 +5,20 @@ const fs = require('fs');
 const DB_FILE = path.join(__dirname, '../db.json');
 
 // Load documents from db.json
-const loadDocuments = () => {
+const loadIncomingDocuments = () => {
   if (!fs.existsSync(DB_FILE)) {
     return [];
   }
   const data = fs.readFileSync(DB_FILE);
-  return JSON.parse(data).documents || [];
+  return JSON.parse(data).incomingDocuments || [];
+};
+
+const loadOutgoingDocuments = () => {
+  if (!fs.existsSync(DB_FILE)) {
+    return [];
+  }
+  const data = fs.readFileSync(DB_FILE);
+  return JSON.parse(data).outgoingDocuments || [];
 };
 
 // Save documents to db.json
@@ -20,7 +28,7 @@ const saveDocuments = (documents) => {
 
 // Get next document number
 const getNextDocumentNumber = () => {
-  const documents = loadDocuments();
+  const documents = loadIncomingDocuments();
   if (documents.length === 0) {
     return "1"; // Start from 1 if there are no documents
   }
@@ -31,7 +39,8 @@ const getNextDocumentNumber = () => {
 
 module.exports = {
   DB_FILE,
-  loadDocuments,
+  loadIncomingDocuments,
+  loadOutgoingDocuments,
   saveDocuments,
   getNextDocumentNumber
 }; 
