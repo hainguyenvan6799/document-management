@@ -25,10 +25,30 @@ const router = express.Router();
 // Configure file upload with multer
 const upload = configureStorage('upload/outgoing-documents');
 
-router.get("/", (_, res) => {
+router.get("/", (req, res) => {
   const documents = loadOutgoingDocuments();
+  const { page = 1, pageSize = 10 } = req.query;
+  
+  const {
+    paginatedDocuments,
+    pageNumber,
+    limit,
+    totalPages,
+    totalItems
+  } = getPaginatedDocuments(documents, page, pageSize);
 
-  res.status(201).json({ message: 'Get documents success', document: documents });
+  res.status(200).json({
+    message: 'Get documents success',
+    data: {
+      documents: paginatedDocuments,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: pageNumber,
+        pageSize: limit
+      }
+    }
+  });
 });
 
 // 10 is the maximum files
