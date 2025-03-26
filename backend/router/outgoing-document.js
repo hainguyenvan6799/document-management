@@ -8,7 +8,10 @@ const {
   PRIORITIES, 
   DOCUMENT_TYPES, 
   STATUSES, 
-  ERROR_CODES
+  ERROR_CODES,
+  PAGINATION,
+  DOCUMENT_TYPE_SHORTCUTS,
+  DOCUMENT_STATUS
 } = require('../constants');
 const {
   loadOutgoingDocuments,
@@ -27,7 +30,10 @@ const upload = configureStorage('upload/outgoing-documents');
 
 router.get("/", (req, res) => {
   const documents = loadOutgoingDocuments();
-  const { page = 1, pageSize = 10 } = req.query;
+  const { 
+    page = PAGINATION.DEFAULT_PAGE, 
+    pageSize = PAGINATION.DEFAULT_PAGE_SIZE 
+  } = req.query;
   
   const {
     paginatedDocuments,
@@ -51,10 +57,10 @@ router.get("/", (req, res) => {
   });
 });
 
-// 10 is the maximum files
+// Use MAX_ATTACHMENTS constant
 router.post(
   "/",
-  upload.array("attachments", 10),
+  upload.array("attachments", PAGINATION.MAX_ATTACHMENTS),
   [
     body('issuedDate').isISO8601().withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid issued date format' }),
     body('referenceNumber').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Reference number is required' }),
@@ -69,8 +75,6 @@ router.post(
   ],
   handleValidationErrors,
   (req, res) => {
-    console.log('Files received:', req.files);
-    console.log('Body received:', req.body);
 
     const documents = loadOutgoingDocuments();
 
@@ -87,7 +91,7 @@ router.post(
       externalRecipient: req.body.externalRecipient,
       internalRecipient: req.body.internalRecipient,
       attachments: req.files ? req.files.map(file => file.filename) : [],
-      status: "waiting",
+      status: DOCUMENT_STATUS.WAITING,
     };
 
     documents.push(newDocument);
@@ -122,7 +126,7 @@ router.patch(
 // Edit Document API
 router.patch(
   '/:documentNumber',
-  upload.array('attachments', 10),
+  upload.array('attachments', PAGINATION.MAX_ATTACHMENTS),
   [
     body('issuedDate')
       .optional()
@@ -189,7 +193,7 @@ router.patch(
 // Download Attachment API
 router.get('/attachments/:filename', (req, res) => {
   const { filename } = req.params;
-  downloadAttachment(filename, 'outgoing', res);
+  downloadAttachment(filename, DOCUMENT_TYPE_SHORTCUTS.OUTGOING, res);
 });
 
 // Search API
@@ -202,13 +206,12 @@ router.get('/search', (req, res) => {
     author,
     referenceNumber,
     summary,
-    page = 1,
-    pageSize = 2
+    page = PAGINATION.DEFAULT_PAGE,
+    pageSize = PAGINATION.SEARCH_PAGE_SIZE
   } = req.query;
   
   let filteredDocuments = applyFilters(documents, { author, issuedDateFrom, issuedDateTo, referenceNumber, summary });
   
-  // Pagination
   const {paginatedDocuments, pageNumber, limit, totalPages, totalItems} = getPaginatedDocuments(filteredDocuments, page, pageSize);
   
   res.status(200).json({

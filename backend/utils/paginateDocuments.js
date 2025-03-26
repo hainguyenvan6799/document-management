@@ -1,3 +1,5 @@
+const { PAGINATION } = require('../constants');
+
 /**
  * Get paginated documents from a document array
  * @param {Array} documents - Array of documents to paginate
@@ -5,7 +7,7 @@
  * @param {number|string} pageSize - Number of items per page
  * @returns {Object} Paginated results and metadata
  */
-function getPaginatedDocuments(documents, page = 1, pageSize = 10) {
+function getPaginatedDocuments(documents, page = PAGINATION.DEFAULT_PAGE, pageSize = PAGINATION.DEFAULT_PAGE_SIZE) {
 	const totalItems = documents.length;
 	const pageNumber = parseInt(page);
 	const limit = parseInt(pageSize);
