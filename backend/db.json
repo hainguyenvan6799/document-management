@@ -17,7 +17,7 @@
         "1742310337699-github-recovery-codes.txt"
       ],
       "processingOpinion": "Adding some comments",
-      "status": ""
+      "status": "waiting"
     },
     {
       "id": "021980c5-7252-4f7c-87fe-3a60230ba992",
@@ -36,7 +36,7 @@
         "1742310337699-github-recovery-codes.txt"
       ],
       "processingOpinion": "Adding some comments",
-      "status": ""
+      "status": "waiting"
     },
     {
       "id": "021980c5-7252-4f7c-87fe-3a60230ba998",
@@ -55,65 +55,59 @@
         "1742310337699-github-recovery-codes.txt"
       ],
       "processingOpinion": "Adding some comments",
-      "status": ""
+      "status": "waiting"
     }
   ], "outgoingDocuments": [
     {
       "id": "021980c5-7252-4f7c-87fe-3a60230ba994",
       "documentNumber": "1",
-      "receivedDate": "12/06/2024",
       "issuedDate": "12/03/2025",
       "referenceNumber": "2901/NV",
       "author": "Hai",
       "summary": "[Outgoing] Regarding feedback on the draft proposal...",
       "priority": "Normal",
-      "dueDate": "2024-06-17",
       "type": "Paper",
-      "receivingMethod": "Paper letter",
+      "signedBy": "Nguyen Van Hai",
+      "signerPosition": "Hiệu trưởng",
       "attachments": [
         "1742310337699-github-recovery-codes.txt",
         "1742310337699-github-recovery-codes.txt"
       ],
-      "processingOpinion": "Adding some comments",
-      "status": ""
+      "status": "waiting"
     },
     {
-      "id": "021980c5-7252-4f7c-87fe-3a60230ba992",
-      "documentNumber": "2",
-      "receivedDate": "12/06/2024",
+      "id": "021980c5-7252-4f7c-87fe-3a60230ba995",
+      "documentNumber": "1",
       "issuedDate": "15/03/2025",
-      "referenceNumber": "2801/NV",
-      "author": "Thu",
-      "summary": "Summary the content",
+      "referenceNumber": "2901/NV",
+      "author": "Hai",
+      "summary": "[Outgoing] Regarding feedback on the draft proposal...",
       "priority": "Normal",
-      "dueDate": "2024-06-17",
       "type": "Paper",
-      "receivingMethod": "Paper letter",
+      "signedBy": "Nguyen Van Hai",
+      "signerPosition": "Hiệu trưởng",
       "attachments": [
         "1742310337699-github-recovery-codes.txt",
         "1742310337699-github-recovery-codes.txt"
       ],
-      "processingOpinion": "Adding some comments",
-      "status": ""
+      "status": "waiting"
     },
     {
-      "id": "021980c5-7252-4f7c-87fe-3a60230ba998",
-      "documentNumber": "3",
-      "receivedDate": "12/06/2024",
+      "id": "021980c5-7252-4f7c-87fe-3a60230ba999",
+      "documentNumber": "1",
       "issuedDate": "17/03/2025",
       "referenceNumber": "2901/NV",
-      "author": "Thu",
-      "summary": "Regarding feedback on the draft proposal...",
+      "author": "Hai",
+      "summary": "[Outgoing] Regarding feedback on the draft proposal...",
       "priority": "Normal",
-      "dueDate": "2024-06-17",
       "type": "Paper",
-      "receivingMethod": "Paper letter",
+      "signedBy": "Nguyen Van Hai",
+      "signerPosition": "Hiệu trưởng",
       "attachments": [
         "1742310337699-github-recovery-codes.txt",
         "1742310337699-github-recovery-codes.txt"
       ],
-      "processingOpinion": "Adding some comments",
-      "status": ""
+      "status": "waiting"
     }
   ]
 }
