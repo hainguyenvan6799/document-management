@@ -95,7 +95,7 @@ router.post(
     };
 
     documents.push(newDocument);
-    saveDocuments(documents);
+    saveDocuments(documents, false);
 
     res.status(201).json({ message: 'Document created successfully', document: newDocument });
   }
@@ -118,7 +118,7 @@ router.patch(
     }
 
     document.status = status;
-    saveDocuments(documents);
+    saveDocuments(documents, false);
     res.status(200).json({ message: 'Status updated successfully', document });
   }
 );
@@ -185,7 +185,7 @@ router.patch(
       attachments: req.files ? req.files.map(file => file.filename) : documents[documentIndex].attachments,
     };
 
-    saveDocuments(documents);
+    saveDocuments(documents, false);
     res.status(200).json({ message: 'Document updated successfully', document: documents[documentIndex] });
   }
 );

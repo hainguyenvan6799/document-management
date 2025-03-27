@@ -22,8 +22,23 @@ const loadOutgoingDocuments = () => {
 };
 
 // Save documents to db.json
-const saveDocuments = (documents) => {
-  fs.writeFileSync(DB_FILE, JSON.stringify({ documents }, null, 2));
+const saveDocuments = (documents, isIncoming = true) => {
+  // Đọc dữ liệu hiện tại từ file
+  let currentData = {};
+  if (fs.existsSync(DB_FILE)) {
+    const data = fs.readFileSync(DB_FILE);
+    currentData = JSON.parse(data);
+  }
+  
+  // Cập nhật dữ liệu mới vào đối tượng hiện tại
+  if (isIncoming) {
+    currentData.incomingDocuments = documents;
+  } else {
+    currentData.outgoingDocuments = documents;
+  }
+  
+  // Ghi dữ liệu đã cập nhật vào file
+  fs.writeFileSync(DB_FILE, JSON.stringify(currentData, null, 2));
 };
 
 // Get next document number
