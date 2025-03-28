@@ -12,10 +12,12 @@
       "dueDate": "20/06/2024",
       "type": "correspondence",
       "receivingMethod": "email",
-      "attachments": ["de_xuat_kinh_phi_2024.pdf"],
+      "attachments": [
+        "de_xuat_kinh_phi_2024.pdf"
+      ],
       "processingOpinion": "Cần xem xét gấp",
-      "status": "waiting",
-      "internalRecipient": "management-staff"
+      "status": "finished",
+      "internalRecipient": "staff"
     },
     {
       "id": "b2c3d4e5-2234-5678-9101-bcdef1234567",
@@ -29,7 +31,9 @@
       "dueDate": "25/06/2024",
       "type": "plan",
       "receivingMethod": "letter",
-      "attachments": ["de_xuat_hop_tac.docx"],
+      "attachments": [
+        "de_xuat_hop_tac.docx"
+      ],
       "processingOpinion": "Chuyển phòng pháp chế xem xét",
       "status": "finished",
       "internalRecipient": "management-staff"
@@ -46,9 +50,11 @@
       "dueDate": "01/07/2024",
       "type": "report",
       "receivingMethod": "email",
-      "attachments": ["bao_cao_tong_ket_2024.pdf"],
+      "attachments": [
+        "bao_cao_tong_ket_2024.pdf"
+      ],
       "processingOpinion": "Kiểm tra số liệu chính xác",
-      "status": "waiting",
+      "status": "finished",
       "internalRecipient": "teacher"
     },
     {
@@ -63,9 +69,11 @@
       "dueDate": "30/06/2024",
       "type": "decision",
       "receivingMethod": "letter",
-      "attachments": ["de_xuat_sua_chua.pdf"],
+      "attachments": [
+        "de_xuat_sua_chua.pdf"
+      ],
       "processingOpinion": "Đang chờ phân bổ ngân sách",
-      "status": "waiting",
+      "status": "finished",
       "internalRecipient": "staff"
     },
     {
@@ -80,7 +88,9 @@
       "dueDate": "05/07/2024",
       "type": "announcement",
       "receivingMethod": "email",
-      "attachments": ["ke_hoach_dao_tao.pdf"],
+      "attachments": [
+        "ke_hoach_dao_tao.pdf"
+      ],
       "processingOpinion": "Cần phòng nhân sự xem xét",
       "status": "finished",
       "internalRecipient": "teacher"
@@ -97,7 +107,9 @@
       "dueDate": "10/07/2024",
       "type": "correspondence",
       "receivingMethod": "email",
-      "attachments": ["chinh_sach_an_ninh_2024.pdf"],
+      "attachments": [
+        "chinh_sach_an_ninh_2024.pdf"
+      ],
       "processingOpinion": "Cần phòng CNTT phê duyệt",
       "status": "waiting",
       "internalRecipient": "staff"
@@ -114,7 +126,9 @@
       "dueDate": "15/07/2024",
       "type": "report",
       "receivingMethod": "email",
-      "attachments": ["bao_cao_tai_chinh_q2.pdf"],
+      "attachments": [
+        "bao_cao_tai_chinh_q2.pdf"
+      ],
       "processingOpinion": "Xem xét và phê duyệt",
       "status": "waiting",
       "internalRecipient": "management-staff"
@@ -131,7 +145,9 @@
       "dueDate": "18/07/2024",
       "type": "plan",
       "receivingMethod": "letter",
-      "attachments": ["phan_tich_phan_hoi.docx"],
+      "attachments": [
+        "phan_tich_phan_hoi.docx"
+      ],
       "processingOpinion": "Cần ý kiến từ tổ chuyên môn",
       "status": "finished",
       "internalRecipient": "teacher"
@@ -148,9 +164,11 @@
       "dueDate": "20/07/2024",
       "type": "decision",
       "receivingMethod": "email",
-      "attachments": ["de_xuat_chuong_trinh.pdf"],
+      "attachments": [
+        "de_xuat_chuong_trinh.pdf"
+      ],
       "processingOpinion": "Cần ban giám hiệu phê duyệt",
-      "status": "waiting",
+      "status": "finished",
       "internalRecipient": "staff"
     },
     {
@@ -165,7 +183,9 @@
       "dueDate": "25/07/2024",
       "type": "announcement",
       "receivingMethod": "letter",
-      "attachments": ["de_xuat_nang_cap.pdf"],
+      "attachments": [
+        "de_xuat_nang_cap.pdf"
+      ],
       "processingOpinion": "Đang chờ phê duyệt ngân sách",
       "status": "waiting",
       "internalRecipient": "management-staff"
@@ -184,7 +204,9 @@
       "summary": "Phê duyệt chính sách nhân sự mới",
       "externalRecipient": "Các trưởng phòng ban",
       "internalRecipient": "Phòng Nhân sự",
-      "attachments": ["chinh_sach_nhan_su_2024.pdf"],
+      "attachments": [
+        "chinh_sach_nhan_su_2024.pdf"
+      ],
       "status": "finished"
     },
     {
@@ -199,7 +221,9 @@
       "summary": "Phản hồi chính thức về khiếu nại của nhà cung cấp",
       "externalRecipient": "Công ty ABC",
       "internalRecipient": "Phòng Mua sắm",
-      "attachments": ["phan_hoi_nha_cung_cap.pdf"],
+      "attachments": [
+        "phan_hoi_nha_cung_cap.pdf"
+      ],
       "status": "waiting"
     },
     {
@@ -214,7 +238,9 @@
       "summary": "Kế hoạch tuyển sinh năm học 2024-2025",
       "externalRecipient": "Sở Giáo dục và Đào tạo",
       "internalRecipient": "Phòng Đào tạo",
-      "attachments": ["ke_hoach_tuyen_sinh.pdf"],
+      "attachments": [
+        "ke_hoach_tuyen_sinh.pdf"
+      ],
       "status": "waiting"
     },
     {
@@ -229,7 +255,9 @@
       "summary": "Thông báo họp hội đồng trường",
       "externalRecipient": "Các thành viên hội đồng",
       "internalRecipient": "Ban thư ký",
-      "attachments": ["thong_bao_hop.pdf"],
+      "attachments": [
+        "thong_bao_hop.pdf"
+      ],
       "status": "finished"
     },
     {
@@ -244,7 +272,9 @@
       "summary": "Báo cáo phân bổ ngân sách quý 3/2024",
       "externalRecipient": "Không",
       "internalRecipient": "Các trưởng bộ phận",
-      "attachments": ["phan_bo_ngan_sach_q3.pdf"],
+      "attachments": [
+        "phan_bo_ngan_sach_q3.pdf"
+      ],
       "status": "waiting"
     },
     {
@@ -259,7 +289,9 @@
       "summary": "Quyết định chấm dứt hợp đồng với nhà cung cấp",
       "externalRecipient": "Công ty Dịch vụ XYZ",
       "internalRecipient": "Phòng Pháp chế",
-      "attachments": ["quyet_dinh_cham_dut_hop_dong.pdf"],
+      "attachments": [
+        "quyet_dinh_cham_dut_hop_dong.pdf"
+      ],
       "status": "finished"
     },
     {
@@ -274,7 +306,9 @@
       "summary": "Công văn về việc di dời văn phòng làm việc",
       "externalRecipient": "Ban quản lý tòa nhà",
       "internalRecipient": "Toàn thể cán bộ, giáo viên",
-      "attachments": ["di_doi_van_phong.pdf"],
+      "attachments": [
+        "di_doi_van_phong.pdf"
+      ],
       "status": "waiting"
     },
     {
@@ -289,7 +323,9 @@
       "summary": "Lịch nghỉ lễ, tết năm học 2024-2025",
       "externalRecipient": "Không",
       "internalRecipient": "Toàn thể cán bộ, giáo viên, học sinh",
-      "attachments": ["lich_nghi_le_2024.pdf"],
+      "attachments": [
+        "lich_nghi_le_2024.pdf"
+      ],
       "status": "finished"
     },
     {
@@ -304,7 +340,9 @@
       "summary": "Kế hoạch cập nhật hệ thống an ninh CNTT",
       "externalRecipient": "Nhà cung cấp dịch vụ CNTT",
       "internalRecipient": "Toàn thể nhân viên",
-      "attachments": ["ke_hoach_an_ninh_cntt.pdf"],
+      "attachments": [
+        "ke_hoach_an_ninh_cntt.pdf"
+      ],
       "status": "waiting"
     },
     {
@@ -319,7 +357,9 @@
       "summary": "Báo cáo công tác tuyển sinh đầu vào năm học 2024-2025",
       "externalRecipient": "Sở Giáo dục và Đào tạo",
       "internalRecipient": "Phòng Tuyển sinh",
-      "attachments": ["bao_cao_tuyen_sinh_2024.pdf"],
+      "attachments": [
+        "bao_cao_tuyen_sinh_2024.pdf"
+      ],
       "status": "finished"
     }
   ]
