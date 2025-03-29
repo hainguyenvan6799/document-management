@@ -1,7 +1,7 @@
 // Document types
-const PRIORITIES = ['Normal', 'Urgent'];
-const DOCUMENT_TYPES = ["Report", "Paper", "Plan", "Announcement", "Decision"];
-const RECEIVING_METHODS = ['Letter', 'Email'];
+const PRIORITIES = ['normal', 'urgent'];
+const DOCUMENT_TYPES = ["report", "correspondence", "plan", "announcement", "decision"];
+const RECEIVING_METHODS = ['letter', 'email'];
 const STATUSES = ["finished", "waiting"];
 const DOCUMENT_STATUS = {
   FINISHED: "finished",
