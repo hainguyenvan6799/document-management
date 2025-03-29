@@ -202,8 +202,7 @@
       "signedBy": "Nguyễn Văn Bình",
       "signerPosition": "principal",
       "summary": "Phê duyệt chính sách nhân sự mới",
-      "externalRecipient": "Các trưởng phòng ban",
-      "internalRecipient": "Phòng Nhân sự",
+      "internalRecipient": "staff",
       "attachments": [
         "chinh_sach_nhan_su_2024.pdf"
       ],
@@ -219,8 +218,7 @@
       "signedBy": "Trần Văn Minh",
       "signerPosition": "vice-principal",
       "summary": "Phản hồi chính thức về khiếu nại của nhà cung cấp",
-      "externalRecipient": "Công ty ABC",
-      "internalRecipient": "Phòng Mua sắm",
+      "internalRecipient": "staff",
       "attachments": [
         "phan_hoi_nha_cung_cap.pdf"
       ],
@@ -236,8 +234,7 @@
       "signedBy": "Lê Thị Hương",
       "signerPosition": "vice-principal",
       "summary": "Kế hoạch tuyển sinh năm học 2024-2025",
-      "externalRecipient": "Sở Giáo dục và Đào tạo",
-      "internalRecipient": "Phòng Đào tạo",
+      "internalRecipient": "teacher",
       "attachments": [
         "ke_hoach_tuyen_sinh.pdf"
       ],
@@ -253,8 +250,7 @@
       "signedBy": "Phạm Văn Thắng",
       "signerPosition": "principal",
       "summary": "Thông báo họp hội đồng trường",
-      "externalRecipient": "Các thành viên hội đồng",
-      "internalRecipient": "Ban thư ký",
+      "internalRecipient": "management-staff",
       "attachments": [
         "thong_bao_hop.pdf"
       ],
@@ -270,8 +266,7 @@
       "signedBy": "Trần Thanh Lâm",
       "signerPosition": "vice-principal",
       "summary": "Báo cáo phân bổ ngân sách quý 3/2024",
-      "externalRecipient": "Không",
-      "internalRecipient": "Các trưởng bộ phận",
+      "internalRecipient": "management-staff",
       "attachments": [
         "phan_bo_ngan_sach_q3.pdf"
       ],
@@ -287,8 +282,7 @@
       "signedBy": "Nguyễn Minh Tuấn",
       "signerPosition": "principal",
       "summary": "Quyết định chấm dứt hợp đồng với nhà cung cấp",
-      "externalRecipient": "Công ty Dịch vụ XYZ",
-      "internalRecipient": "Phòng Pháp chế",
+      "internalRecipient": "staff",
       "attachments": [
         "quyet_dinh_cham_dut_hop_dong.pdf"
       ],
@@ -304,8 +298,7 @@
       "signedBy": "Võ Hoàng Nam",
       "signerPosition": "vice-principal",
       "summary": "Công văn về việc di dời văn phòng làm việc",
-      "externalRecipient": "Ban quản lý tòa nhà",
-      "internalRecipient": "Toàn thể cán bộ, giáo viên",
+      "internalRecipient": "staff",
       "attachments": [
         "di_doi_van_phong.pdf"
       ],
@@ -321,8 +314,7 @@
       "signedBy": "Trần Thị Mai",
       "signerPosition": "vice-principal",
       "summary": "Lịch nghỉ lễ, tết năm học 2024-2025",
-      "externalRecipient": "Không",
-      "internalRecipient": "Toàn thể cán bộ, giáo viên, học sinh",
+      "internalRecipient": "teacher",
       "attachments": [
         "lich_nghi_le_2024.pdf"
       ],
@@ -338,8 +330,7 @@
       "signedBy": "Hoàng Văn Đức",
       "signerPosition": "principal",
       "summary": "Kế hoạch cập nhật hệ thống an ninh CNTT",
-      "externalRecipient": "Nhà cung cấp dịch vụ CNTT",
-      "internalRecipient": "Toàn thể nhân viên",
+      "internalRecipient": "staff",
       "attachments": [
         "ke_hoach_an_ninh_cntt.pdf"
       ],
@@ -355,8 +346,7 @@
       "signedBy": "Nguyễn Thị Lan",
       "signerPosition": "vice-principal",
       "summary": "Báo cáo công tác tuyển sinh đầu vào năm học 2024-2025",
-      "externalRecipient": "Sở Giáo dục và Đào tạo",
-      "internalRecipient": "Phòng Tuyển sinh",
+      "internalRecipient": "teacher",
       "attachments": [
         "bao_cao_tuyen_sinh_2024.pdf"
       ],

@@ -70,7 +70,6 @@ router.post(
     body('signedBy').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Signer is required' }),
     body('signerPosition').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Signer position is required' }),
     body('summary').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Summary is required' }),
-    body('externalRecipient').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'External recipient is required' }),
     body('internalRecipient').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Internal recipient is required' }),
     body('status').isIn(STATUSES).withMessage({ code: ERROR_CODES.INVALID_STATUS, message: 'Invalid status' }),
   ],
@@ -89,7 +88,6 @@ router.post(
       signedBy: req.body.signedBy,
       signerPosition: req.body.signerPosition,
       summary: req.body.summary,
-      externalRecipient: req.body.externalRecipient,
       internalRecipient: req.body.internalRecipient,
       attachments: req.files ? req.files.map(file => file.filename) : [],
       status: DOCUMENT_STATUS.WAITING,
@@ -157,10 +155,6 @@ router.patch(
       .optional()
       .notEmpty()
       .withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Summary cannot be empty if provided' }),
-    body('externalRecipient')
-      .optional()
-      .notEmpty()
-      .withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'External recipient cannot be empty if provided' }),
     body('internalRecipient')
       .optional()
       .notEmpty()
