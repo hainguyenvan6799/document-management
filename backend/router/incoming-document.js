@@ -12,7 +12,8 @@ const {
   ERROR_CODES,
   PAGINATION,
   DOCUMENT_TYPE_SHORTCUTS,
-  DOCUMENT_STATUS
+  DOCUMENT_STATUS,
+  DATE_FORMATS
 } = require('../constants');
 const {
   loadIncomingDocuments,
@@ -63,13 +64,13 @@ router.post(
   "/",
   upload.array("attachments", PAGINATION.MAX_ATTACHMENTS),
   [
-    body('receivedDate').isISO8601().withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid received date format' }),
-    body('issuedDate').isISO8601().withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid issued date format' }),
+    body('receivedDate').matches(DATE_FORMATS.DD_MM_YYYY_REGEX).withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid received date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
+    body('issuedDate').matches(DATE_FORMATS.DD_MM_YYYY_REGEX).withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid issued date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
     body('referenceNumber').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Reference number is required' }),
     body('author').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Author is required' }),
     body('summary').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Summary is required' }),
     body('priority').isIn(PRIORITIES).withMessage({ code: ERROR_CODES.INVALID_PRIORITY, message: 'Priority must be "Normal" or "Urgent"' }),
-    body('dueDate').isISO8601().withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid due date format' }),
+    body('dueDate').matches(DATE_FORMATS.DD_MM_YYYY_REGEX).withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid due date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
     body('type').isIn(DOCUMENT_TYPES).withMessage({ code: ERROR_CODES.INVALID_TYPE, message: 'Invalid type' }),
     body('receivingMethod').isIn(RECEIVING_METHODS).withMessage({ code: ERROR_CODES.INVALID_METHOD, message: 'Invalid receiving method' }),
     body('processingOpinion').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Processing opinion is required' }),
@@ -132,12 +133,12 @@ router.patch(
   [
     body('receivedDate')
       .optional()
-      .isISO8601()
-      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid received date format' }),
+      .matches(DATE_FORMATS.DD_MM_YYYY_REGEX)
+      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid received date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
     body('issuedDate')
       .optional()
-      .isISO8601()
-      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid issued date format' }),
+      .matches(DATE_FORMATS.DD_MM_YYYY_REGEX)
+      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid issued date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
     body('referenceNumber')
       .optional()
       .notEmpty()
@@ -156,8 +157,8 @@ router.patch(
       .withMessage({ code: ERROR_CODES.INVALID_PRIORITY, message: 'Invalid priority' }),
     body('dueDate')
       .optional()
-      .isISO8601()
-      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid due date format' }),
+      .matches(DATE_FORMATS.DD_MM_YYYY_REGEX)
+      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid due date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
     body('type')
       .optional()
       .isIn(DOCUMENT_TYPES)

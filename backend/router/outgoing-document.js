@@ -11,7 +11,8 @@ const {
   ERROR_CODES,
   PAGINATION,
   DOCUMENT_TYPE_SHORTCUTS,
-  DOCUMENT_STATUS
+  DOCUMENT_STATUS,
+  DATE_FORMATS
 } = require('../constants');
 const {
   loadOutgoingDocuments,
@@ -62,7 +63,7 @@ router.post(
   "/",
   upload.array("attachments", PAGINATION.MAX_ATTACHMENTS),
   [
-    body('issuedDate').isISO8601().withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid issued date format' }),
+    body('issuedDate').matches(DATE_FORMATS.DD_MM_YYYY_REGEX).withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid issued date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
     body('referenceNumber').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Reference number is required' }),
     body('priority').isIn(PRIORITIES).withMessage({ code: ERROR_CODES.INVALID_PRIORITY, message: 'Invalid priority' }),
     body('type').isIn(DOCUMENT_TYPES).withMessage({ code: ERROR_CODES.INVALID_TYPE, message: 'Invalid type' }),
@@ -130,8 +131,8 @@ router.patch(
   [
     body('issuedDate')
       .optional()
-      .isISO8601()
-      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: 'Invalid issued date format' }),
+      .matches(DATE_FORMATS.DD_MM_YYYY_REGEX)
+      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid issued date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
     body('referenceNumber')
       .optional()
       .notEmpty()

@@ -22,7 +22,7 @@ const formatValidationErrors = (errors) => {
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ 
+    return res.status(200).json({ 
       message: MESSAGE_CODES.VALIDATION_FAILED,
       errors: formatValidationErrors(errors)
     });
