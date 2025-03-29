@@ -206,7 +206,7 @@
       "attachments": [
         "chinh_sach_nhan_su_2024.pdf"
       ],
-      "status": "finished"
+      "status": "waiting"
     },
     {
       "id": "e5f6g7h8-5234-5678-9101-ef123456789a",
@@ -222,7 +222,7 @@
       "attachments": [
         "phan_hoi_nha_cung_cap.pdf"
       ],
-      "status": "waiting"
+      "status": "finished"
     },
     {
       "id": "f6g7h8i9-6234-5678-9101-fg123456789b",
