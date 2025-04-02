@@ -13,7 +13,8 @@
       "type": "correspondence",
       "receivingMethod": "email",
       "attachments": [
-        "de_xuat_kinh_phi_2024.pdf"
+        "de_xuat_kinh_phi_2024.txt",
+        "de_xuat_kinh_phi_2024.txt"
       ],
       "processingOpinion": "Cần xem xét gấp",
       "status": "finished",
@@ -195,7 +196,7 @@
     {
       "id": "d4e5f6g7-4234-5678-9101-def123456789",
       "documentNumber": "1",
-      "issuedDate": "15/06/2024",
+      "issuedDate": "01/03/2025",
       "referenceNumber": "4001/NV",
       "priority": "urgent",
       "type": "decision",
@@ -211,7 +212,7 @@
     {
       "id": "e5f6g7h8-5234-5678-9101-ef123456789a",
       "documentNumber": "2",
-      "issuedDate": "18/06/2024",
+      "issuedDate": "02/03/2025",
       "referenceNumber": "4102/NV",
       "priority": "normal",
       "type": "correspondence",
@@ -227,7 +228,7 @@
     {
       "id": "f6g7h8i9-6234-5678-9101-fg123456789b",
       "documentNumber": "3",
-      "issuedDate": "20/06/2024",
+      "issuedDate": "03/03/2025",
       "referenceNumber": "4203/NV",
       "priority": "normal",
       "type": "plan",
@@ -243,7 +244,7 @@
     {
       "id": "g7h8i9j0-7234-5678-9101-gh123456789c",
       "documentNumber": "4",
-      "issuedDate": "22/06/2024",
+      "issuedDate": "04/03/2025",
       "referenceNumber": "4304/NV",
       "priority": "urgent",
       "type": "announcement",
@@ -259,7 +260,7 @@
     {
       "id": "h8i9j0k1-8234-5678-9101-hi123456789d",
       "documentNumber": "5",
-      "issuedDate": "25/06/2024",
+      "issuedDate": "05/03/2025",
       "referenceNumber": "4405/NV",
       "priority": "normal",
       "type": "report",
@@ -275,7 +276,7 @@
     {
       "id": "i9j0k1l2-9234-5678-9101-ij123456789e",
       "documentNumber": "6",
-      "issuedDate": "27/06/2024",
+      "issuedDate": "06/03/2025",
       "referenceNumber": "4506/NV",
       "priority": "urgent",
       "type": "decision",
@@ -291,7 +292,7 @@
     {
       "id": "j0k1l2m3-0234-5678-9101-jk123456789f",
       "documentNumber": "7",
-      "issuedDate": "29/06/2024",
+      "issuedDate": "07/03/2025",
       "referenceNumber": "4607/NV",
       "priority": "normal",
       "type": "correspondence",
@@ -307,7 +308,7 @@
     {
       "id": "k1l2m3n4-1234-5678-9101-kl123456789g",
       "documentNumber": "8",
-      "issuedDate": "01/07/2024",
+      "issuedDate": "08/03/2025",
       "referenceNumber": "4708/NV",
       "priority": "normal",
       "type": "announcement",
@@ -323,7 +324,7 @@
     {
       "id": "l2m3n4o5-2234-5678-9101-lm123456789h",
       "documentNumber": "9",
-      "issuedDate": "03/07/2024",
+      "issuedDate": "09/03/2025",
       "referenceNumber": "4809/NV",
       "priority": "urgent",
       "type": "plan",
@@ -339,7 +340,7 @@
     {
       "id": "m3n4o5p6-3234-5678-9101-mn123456789i",
       "documentNumber": "10",
-      "issuedDate": "05/07/2024",
+      "issuedDate": "10/03/2025",
       "referenceNumber": "4910/NV",
       "priority": "normal",
       "type": "report",

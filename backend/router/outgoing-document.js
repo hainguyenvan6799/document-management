@@ -212,7 +212,8 @@ router.get('/search', (req, res) => {
   res.status(200).json({
     message: 'Documents found',
     data: {
-      documents: paginatedDocuments,
+      paginatedDocuments,
+      filteredDocuments,
       pagination: {
         totalItems,
         totalPages,
