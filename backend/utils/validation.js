@@ -11,7 +11,7 @@ const formatValidationErrors = (errors) => {
     // Handle both string and object error messages
     const errorInfo = typeof error.msg === 'object' 
       ? error.msg 
-      : { code: 'ERR_VALIDATION_FAILED', message: error.msg };
+      : { code: error.code, message: error.msg };
     
     formattedErrors[error.path].push(errorInfo);
   });
