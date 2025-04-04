@@ -7,6 +7,11 @@ const outgoingDocumentRouter = require("./router/outgoing-document");
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use('', (req, res) => {
+  res.send('Hello World!');
+});
+
 app.use("/incoming-documents", incomingDocumentRouter);
 app.use("/outgoing-documents", outgoingDocumentRouter);
 
