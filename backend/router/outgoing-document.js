@@ -1,13 +1,13 @@
 const express = require('express');
-const {body} = require("express-validator");
+const { body } = require("express-validator");
 const { v4: uuidv4 } = require('uuid');
-const { 
+const {
   handleValidationErrors
 } = require('../utils/validation');
 const {
-  PRIORITIES, 
-  DOCUMENT_TYPES, 
-  STATUSES, 
+  PRIORITIES,
+  DOCUMENT_TYPES,
+  STATUSES,
   ERROR_CODES,
   PAGINATION,
   DOCUMENT_TYPE_SHORTCUTS,
@@ -31,11 +31,11 @@ const upload = configureStorage('upload/outgoing-documents');
 
 router.get("/", (req, res) => {
   const documents = loadOutgoingDocuments();
-  const { 
-    page = PAGINATION.DEFAULT_PAGE, 
-    pageSize = PAGINATION.DEFAULT_PAGE_SIZE 
+  const {
+    page = PAGINATION.DEFAULT_PAGE,
+    pageSize = PAGINATION.DEFAULT_PAGE_SIZE
   } = req.query;
-  
+
   const {
     paginatedDocuments,
     pageNumber,
@@ -63,7 +63,8 @@ router.post(
   "/",
   upload.array("attachments", PAGINATION.MAX_ATTACHMENTS),
   [
-    body('issuedDate').matches(DATE_FORMATS.DD_MM_YYYY_REGEX).withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid issued date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
+    body('issuedDate')
+      .notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: `Not empty` }),
     body('referenceNumber').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Reference number is required' }),
     body('priority').isIn(PRIORITIES).withMessage({ code: ERROR_CODES.INVALID_PRIORITY, message: 'Invalid priority' }),
     body('type').isIn(DOCUMENT_TYPES).withMessage({ code: ERROR_CODES.INVALID_TYPE, message: 'Invalid type' }),
@@ -194,7 +195,7 @@ router.get('/attachments/:filename', (req, res) => {
 // Search API
 router.get('/search', (req, res) => {
   const documents = loadOutgoingDocuments();
-  
+
   const {
     issuedDateFrom,
     issuedDateTo,
@@ -204,11 +205,11 @@ router.get('/search', (req, res) => {
     page = PAGINATION.DEFAULT_PAGE,
     pageSize = PAGINATION.SEARCH_PAGE_SIZE
   } = req.query;
-  
+
   let filteredDocuments = applyFilters(documents, { author, issuedDateFrom, issuedDateTo, referenceNumber, summary });
-  
-  const {paginatedDocuments, pageNumber, limit, totalPages, totalItems} = getPaginatedDocuments(filteredDocuments, page, pageSize);
-  
+
+  const { paginatedDocuments, pageNumber, limit, totalPages, totalItems } = getPaginatedDocuments(filteredDocuments, page, pageSize);
+
   res.status(200).json({
     message: 'Documents found',
     data: {

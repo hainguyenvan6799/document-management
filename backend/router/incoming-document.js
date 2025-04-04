@@ -1,14 +1,14 @@
 const express = require('express');
-const {body} = require("express-validator");
+const { body } = require("express-validator");
 const { v4: uuidv4 } = require('uuid');
-const { 
+const {
   handleValidationErrors
 } = require('../utils/validation');
 const {
-  PRIORITIES, 
-  DOCUMENT_TYPES, 
-  RECEIVING_METHODS, 
-  STATUSES, 
+  PRIORITIES,
+  DOCUMENT_TYPES,
+  RECEIVING_METHODS,
+  STATUSES,
   ERROR_CODES,
   PAGINATION,
   DOCUMENT_TYPE_SHORTCUTS,
@@ -32,11 +32,11 @@ const upload = configureStorage('upload/incoming-documents');
 
 router.get("/", (req, res) => {
   const documents = loadIncomingDocuments();
-  const { 
-    page = PAGINATION.DEFAULT_PAGE, 
-    pageSize = PAGINATION.DEFAULT_PAGE_SIZE 
+  const {
+    page = PAGINATION.DEFAULT_PAGE,
+    pageSize = PAGINATION.DEFAULT_PAGE_SIZE
   } = req.query;
-  
+
   const {
     paginatedDocuments,
     pageNumber,
@@ -64,13 +64,13 @@ router.post(
   "/",
   upload.array("attachments", PAGINATION.MAX_ATTACHMENTS),
   [
-    body('receivedDate').matches(DATE_FORMATS.DD_MM_YYYY_REGEX).withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid received date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
-    body('issuedDate').matches(DATE_FORMATS.DD_MM_YYYY_REGEX).withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid issued date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
+    body('receivedDate').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: `Not empty` }),
+    body('issuedDate').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: `Not empty` }),
     body('referenceNumber').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Reference number is required' }),
     body('author').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Author is required' }),
     body('summary').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Summary is required' }),
     body('priority').isIn(PRIORITIES).withMessage({ code: ERROR_CODES.INVALID_PRIORITY, message: 'Priority must be "Normal" or "Urgent"' }),
-    body('dueDate').matches(DATE_FORMATS.DD_MM_YYYY_REGEX).withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid due date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
+    body('dueDate').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: `Not empty` }),
     body('type').isIn(DOCUMENT_TYPES).withMessage({ code: ERROR_CODES.INVALID_TYPE, message: 'Invalid type' }),
     body('receivingMethod').isIn(RECEIVING_METHODS).withMessage({ code: ERROR_CODES.INVALID_METHOD, message: 'Invalid receiving method' }),
     body('processingOpinion').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Processing opinion is required' }),
@@ -133,12 +133,12 @@ router.patch(
   [
     body('receivedDate')
       .optional()
-      .matches(DATE_FORMATS.DD_MM_YYYY_REGEX)
-      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid received date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
+      .notEmpty()
+      .withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: `Not empty` }),
     body('issuedDate')
       .optional()
-      .matches(DATE_FORMATS.DD_MM_YYYY_REGEX)
-      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid issued date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
+      .notEmpty()
+      .withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: `Not empty` }),
     body('referenceNumber')
       .optional()
       .notEmpty()
@@ -157,8 +157,8 @@ router.patch(
       .withMessage({ code: ERROR_CODES.INVALID_PRIORITY, message: 'Invalid priority' }),
     body('dueDate')
       .optional()
-      .matches(DATE_FORMATS.DD_MM_YYYY_REGEX)
-      .withMessage({ code: ERROR_CODES.INVALID_DATE_FORMAT, message: `Invalid due date format. Use ${DATE_FORMATS.DD_MM_YYYY_FORMAT}` }),
+      .notEmpty()
+      .withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: `Not empty` }),
     body('type')
       .optional()
       .isIn(DOCUMENT_TYPES)
@@ -210,7 +210,7 @@ router.get('/attachments/:filename', (req, res) => {
 // Search API
 router.get('/search', (req, res) => {
   const documents = loadIncomingDocuments();
-  
+
   const {
     issuedDateFrom,
     issuedDateTo,
@@ -220,11 +220,11 @@ router.get('/search', (req, res) => {
     page = PAGINATION.DEFAULT_PAGE,
     pageSize = PAGINATION.SEARCH_PAGE_SIZE
   } = req.query;
-  
+
   let filteredDocuments = applyFilters(documents, { author, issuedDateFrom, issuedDateTo, referenceNumber, summary });
-  
-  const {paginatedDocuments, pageNumber, limit, totalPages, totalItems} = getPaginatedDocuments(filteredDocuments, page, pageSize);
-  
+
+  const { paginatedDocuments, pageNumber, limit, totalPages, totalItems } = getPaginatedDocuments(filteredDocuments, page, pageSize);
+
   res.status(200).json({
     message: 'Documents found',
     data: {
