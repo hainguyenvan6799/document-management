@@ -113,7 +113,7 @@
       ],
       "processingOpinion": "Cần phòng CNTT phê duyệt",
       "status": "waiting",
-      "internalRecipient": "staff"
+      "internalRecipient": "teacher"
     },
     {
       "id": "g8h9i0j1-7234-5678-9101-ghij12345672",
@@ -190,6 +190,25 @@
       "processingOpinion": "Đang chờ phê duyệt ngân sách",
       "status": "waiting",
       "internalRecipient": "management-staff"
+    },
+    {
+      "id": "66e1531d-855e-4111-adcd-9f4689e7fb30",
+      "documentNumber": "11",
+      "receivedDate": "10/04/2025",
+      "issuedDate": "06/04/2025",
+      "referenceNumber": "3710/NVX",
+      "author": "Hải",
+      "summary": "Tạo tài liệu",
+      "priority": "normal",
+      "dueDate": "17/04/2025",
+      "type": "report",
+      "receivingMethod": "email",
+      "attachments": [
+        "1743922754655-de_xuat_kinh_phi_2024.txt"
+      ],
+      "processingOpinion": "Không có",
+      "status": "waiting",
+      "internalRecipient": ""
     }
   ],
   "outgoingDocuments": [
@@ -205,7 +224,8 @@
       "summary": "Phê duyệt chính sách nhân sự mới",
       "internalRecipient": "staff",
       "attachments": [
-        "chinh_sach_nhan_su_2024.pdf"
+        "de_xuat_kinh_phi_2024.txt",
+        "de_xuat_kinh_phi_2024.txt"
       ],
       "status": "waiting"
     },
@@ -217,13 +237,13 @@
       "priority": "normal",
       "type": "correspondence",
       "signedBy": "Trần Văn Minh",
-      "signerPosition": "vice-principal",
+      "signerPosition": "Hiệu trưởng",
       "summary": "Phản hồi chính thức về khiếu nại của nhà cung cấp",
       "internalRecipient": "staff",
-      "attachments": [
-        "phan_hoi_nha_cung_cap.pdf"
-      ],
-      "status": "finished"
+      "attachments": [],
+      "status": "finished",
+      "attachmentDetails": [],
+      "body": {}
     },
     {
       "id": "f6g7h8i9-6234-5678-9101-fg123456789b",
@@ -233,13 +253,20 @@
       "priority": "normal",
       "type": "plan",
       "signedBy": "Lê Thị Hương",
-      "signerPosition": "vice-principal",
+      "signerPosition": "Hiệu trưởng",
       "summary": "Kế hoạch tuyển sinh năm học 2024-2025",
       "internalRecipient": "teacher",
       "attachments": [
         "ke_hoach_tuyen_sinh.pdf"
       ],
-      "status": "waiting"
+      "status": "finished",
+      "attachmentDetails": [
+        {
+          "fileName": "ke_hoach_tuyen_sinh.pdf",
+          "fileUrl": ""
+        }
+      ],
+      "body": {}
     },
     {
       "id": "g7h8i9j0-7234-5678-9101-gh123456789c",
@@ -255,7 +282,7 @@
       "attachments": [
         "thong_bao_hop.pdf"
       ],
-      "status": "finished"
+      "status": "waiting"
     },
     {
       "id": "h8i9j0k1-8234-5678-9101-hi123456789d",
@@ -352,6 +379,22 @@
         "bao_cao_tuyen_sinh_2024.pdf"
       ],
       "status": "finished"
+    },
+    {
+      "id": "82736bd1-3126-441c-9196-20994eecceb9",
+      "documentNumber": "12",
+      "issuedDate": "01/04/2025",
+      "referenceNumber": "zzzz",
+      "priority": "normal",
+      "type": "report",
+      "signedBy": "z",
+      "signerPosition": "Phó Hiệu trưởng",
+      "summary": "z",
+      "internalRecipient": "teacher",
+      "attachments": [
+        "1743924978326-de_xuat_kinh_phi_2024.txt"
+      ],
+      "status": "waiting"
     }
   ]
 }
