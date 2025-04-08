@@ -1,0 +1,37 @@
+.spinning-wheel {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.wheel {
+  width: 300px;
+  height: 300px;
+  border: 2px solid black;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.prize {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform-origin: 50% 100%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  background-color: #ffc107;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 20px;
+}

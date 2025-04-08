@@ -1,0 +1,114 @@
+<div class="main-container p-3">
+  <mat-label
+    class="main-container__header"
+    >{{ `${documentTitle()} công văn đi` }}</mat-label
+  >
+  <div class="main-container__formInput p-3">
+    <div class="row">
+      <div class="col-3">
+        <cc-date-picker
+          [value]="body().issuedDate"
+          [errorMessage]="(this.error()?.['issuedDate']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('issuedDate', $event)"
+          label="issuedDate"
+        />
+      </div>
+      <div class="col-3">
+        <cc-input
+          [value]="body().referenceNumber"
+          [errorMessage]="(this.error()?.['referenceNumber']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('referenceNumber', $event)"
+          label="referenceNumber"
+        />
+      </div>
+      <div class="col-3">
+        <cc-dropdown
+          [listDropdown]="dropdown().priority"
+          [value]="body().priority"
+          [errorMessage]="(this.error()?.['priority']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('priority', $event)"
+          label="priority"
+        />
+      </div>
+      <div class="col-3">
+        <cc-dropdown
+          [listDropdown]="dropdown().documentType"
+          [value]="body().type"
+          (valueChange)="onChange('type', $event)"
+          [errorMessage]="(this.error()?.['type']?.[0]?.code | translateAsync) ?? ''"
+          label="type"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <cc-input
+          [value]="body().signedBy"
+          [errorMessage]="(this.error()?.['signedBy']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('signedBy', $event)"
+          label="signedBy"
+        />
+      </div>
+      <div class="col-3">
+        <cc-dropdown
+          [listDropdown]="dropdown().signerPosition"
+          [value]="body().signerPosition"
+          [errorMessage]="(this.error()?.['signerPosition']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('signerPosition', $event)"
+          label="signerPosition"
+        />
+      </div>
+      <div class="col-3">
+        <cc-input
+          [value]="body().summary"
+          [errorMessage]="(this.error()?.['summary']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('summary', $event)"
+          label="summary"
+        />
+      </div>
+      <div class="col-3">
+        <cc-dropdown
+          [listDropdown]="dropdown().internalRecipient"
+          [value]="body().internalRecipient ?? ''"
+          [errorMessage]="(this.error()?.['internalRecipient']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('internalRecipient', $event)"
+          label="internalRecipient"
+        />
+      </div>
+    </div>
+    @if(!isEditDocument()) {
+    <div class="col-6 d-flex file-upload">
+      <p-fileupload
+        #fu
+        [showUploadButton]="false"
+        [multiple]="true"
+        mode="advanced"
+        [chooseLabel]="('choose' | translateAsync) ?? ''"
+        [cancelLabel]="('cancelAll' | translateAsync) ?? ''"
+        chooseIcon="pi pi-upload"
+        [name]="this.body().attachments"
+        maxFileSize="1000000"
+        (onSelect)="onUpload($event)"
+        (onClear)="onRemove()"
+      />
+    </div>
+    } @else {
+    <hr />
+    <app-list-uploaded
+      [listData]="body().attachments"
+      [columns]="['Stt', 'Tên File']"
+      documentType="outgoing-document"
+    />
+    }
+    <div class="button d-flex justify-content-end p-2">
+      <cc-button
+        mode="secondary"
+        title="cancel"
+        (onClick)="cancel()"
+      ></cc-button>
+      <cc-button title="save" (onClick)="save()"></cc-button>
+    </div>
+  </div>
+</div>
+
+<p-toast />

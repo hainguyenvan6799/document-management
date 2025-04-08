@@ -1,0 +1,31 @@
+app-cc-loading {
+  position: fixed;
+  margin: auto;
+  z-index: 1000;
+  top: 48%;
+  left: 49%;
+  backdrop-filter: blur(10px);
+}
+
+.blur-background {
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.body {
+  position: relative;
+  top: 13vh;
+  min-height: 80vh;
+  margin-bottom: 10rem;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}

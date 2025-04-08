@@ -1,0 +1,35 @@
+@use '../variable' as *;
+
+.dialog-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $dark;
+    color: $white;
+    padding: 10px;
+    min-height: 50px;
+}
+
+.dialog_content {
+    display: block;
+    min-width: 20rem;
+  
+    .box_content {
+      border: 2px solid rgba(182, 182, 182, 0.26);
+      border-radius: 4px;
+      padding: 1rem 2rem;
+    }
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    font-weight: 600;
+    margin: 0;
+    height: 100%;
+  }
+  
+  .close_icon {
+    cursor: pointer;
+  }
+  

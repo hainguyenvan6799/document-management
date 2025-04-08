@@ -1,0 +1,15 @@
+<mat-button-toggle-group
+  name="favoriteColor"
+  aria-label="Favorite Color"
+  [hideSingleSelectionIndicator]="true"
+>
+  @for(toggle of listToggle(); track $index) {
+  <mat-button-toggle
+    (change)="onChangeValue($event)"
+    [class.mat-button-toggle-checked]="activeClass() && value() == toggle.label"
+    [value]="toggle.label"
+    >{{ toggle.label | translateAsync }}</mat-button-toggle
+  >
+
+  }
+</mat-button-toggle-group>

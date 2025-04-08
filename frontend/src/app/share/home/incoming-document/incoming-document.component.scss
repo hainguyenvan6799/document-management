@@ -1,0 +1,148 @@
+@use '../../../commons/variable' as *;
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: $primary;
+}
+
+table {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+table thead tr {
+  background-color: $dark !important;
+  color: $white;
+}
+
+.document-details {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+  
+  li {
+    margin-bottom: 6px;
+    line-height: 1.3;
+    font-style: italic;
+  }
+}
+
+.highlight-row {
+  background-color: #b3e5fc;
+  border-left: 4px solid #0288d1;
+  animation: pulseBackground 1.5s ease-in-out;
+  animation-iteration-count: 2;
+  animation-fill-mode: forwards;
+}
+
+.attachment-list {
+  display: flex;
+  flex-direction: column;
+  
+  .attachment-item {
+    margin-bottom: 3px;
+    
+    .file-name {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.9em;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #2196F3;
+      cursor: pointer;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+        color: #0d8aee;
+      }
+    }
+
+    .no-file-name {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.9em;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #818588;
+      // cursor: none;
+      pointer-events: none;
+      text-decoration: none;
+    }
+  }
+  
+  .attachment-count {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 2px;
+  }
+}
+
+@keyframes pulseBackground {
+  0% {
+    background-color: #b3e5fc;
+  }
+  50% {
+    background-color: #4fc3f7;
+  }
+  100% {
+    background-color: #b3e5fc;
+  }
+}
+
+.mat-elevation-z8 {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: #007bff !important;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-secondary {
+  color: #6c757d !important;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.my-3 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+} 

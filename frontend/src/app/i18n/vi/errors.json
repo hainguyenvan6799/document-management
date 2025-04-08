@@ -1,0 +1,7 @@
+{
+    "ERR_REQUIRED_FIELD": "Trường này không được để trống",
+    "ERR_INVALID_PRIORITY": "Độ khẩn không được để trống",
+    "ERR_INVALID_TYPE": "Loại văn bản không được để trống",
+    "ERR_INVALID_METHOD": "Phương thức không được để trống",
+    "ERR_INVALID_STATUS": "Trạng thái không được để trống"
+}

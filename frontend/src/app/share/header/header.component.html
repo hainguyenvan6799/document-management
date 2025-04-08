@@ -1,0 +1,47 @@
+<div class="container-fluid nav-bar p-0">
+    <div class="container">
+      <nav class="navbar navbar-light navbar-expand-lg">
+        <h1 class="text-primary fw-bold mb-0"><span (click)="navigateTo('/')"
+          class="text-dark dancing-script-logo cursor-pointer">Quản lý công văn</span> </h1>
+        <button (click)="toggleMenu()" class="navbar-toggler py-2 px-3 outline-none" type="button"
+          data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div [@menuAnimation] class="collapse navbar-collapse" id="menu" [class.show]="isMenuOpen">
+          <ul #items class="d-flex jutify-content-between ml-auto navbar-nav">
+            <!-- @for (navbars of LIST_NAVBAR; track navbars; let i = $index) {
+              <li class="nav-item">
+                <a [id]="navbars.id" class="nav-link"
+                  [ngClass]="{ 'active': currentUrl === navbars.id || currentUrl.includes(navbars.id) || (currentUrl === '' && navbars.id ==='home')}"
+                [routerLink]="[navbars.url]">{{navbars.title | translateAsync}}</a>
+                @if (navbars.child && navbars.child.length> 0) {
+                  <ul class="menu_child dropdown-menu" id="menu_child_3_3"
+                    [ngStyle]="{ 'left.px': 0}">
+                    <div class="d-flex m-2 justify-content-between lv2_title">
+                      @for ( child of navbars.child; track  child) {
+                        <div>
+                          <a [routerLink]="['collections',child.url]" class="child">
+                            {{child.title | translateAsync}}
+                          </a>
+                          <hr>
+                            @if (child.child) {
+                              <div>
+                                @for (subChild of child.child; track subChild) {
+                                  <div class="pt-3">
+                                    <a [routerLink]="['collections',subChild.url]">{{subChild.title}}</a>
+                                  </div>
+                                }
+                              </div>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </ul>
+                  }
+                </li>
+              } -->
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>

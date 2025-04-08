@@ -1,0 +1,15 @@
+<div class="spinning-wheel">
+  <div class="wheel" [@spin]="{ value: 'spinning', params: { rotation: rotation }}"
+    [style.transform]="'rotate(' + rotation + 'deg)'">
+    @for (prize of prizes; track prize; let i = $index) {
+      <div class="prize"
+      [style.transform]="'rotate(' + (360 / prizes.length * i) + 'deg)'">{{ prize }}</div>
+    }
+  </div>
+  <button (click)="spinWheel()">Spin</button>
+  @if (selectedPrize) {
+    <div class="result">
+      <h2>You won: {{ selectedPrize }}</h2>
+    </div>
+  }
+</div>

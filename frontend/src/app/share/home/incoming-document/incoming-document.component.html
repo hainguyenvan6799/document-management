@@ -1,0 +1,295 @@
+<div>
+  <!-- Waiting Documents Section -->
+  <h2>Văn bản đến chờ xử lý</h2>
+  <table
+    mat-table
+    [dataSource]="waitingDocuments()"
+    class="mat-elevation-z8 demo-table"
+  >
+    <ng-container matColumnDef="stt">
+      <th mat-header-cell *matHeaderCellDef>{{ "STT" }}</th>
+      <td mat-cell *matCellDef="let element; let i = index">
+        {{ waitingCurrentPage() * waitingPageSize() + i + 1 }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="documentNumber">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "documentNumber" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.documentNumber }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="receivedDate">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "receivedDate" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.receivedDate }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="documentInfomation">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "documentInfomation" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <ul class="document-details">
+          <li>- Ngày tháng năm phát hành văn bản: {{ element.issuedDate }}</li>
+          <li>- Số văn bản: {{ element.referenceNumber }}</li>
+          <li>- Tác giả: {{ element.author }}</li>
+          <li>- Trích yếu văn bản: {{ element.summary }}</li>
+        </ul>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="priority">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "priority" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span
+          [ngClass]="{
+            'text-danger': element.priority === 'urgent',
+            'text-secondary':
+              !element.priority ||
+              (element.priority !== 'normal' && element.priority !== 'urgent')
+          }"
+        >
+          {{
+            element.priority === "normal" || element.priority === "urgent"
+              ? ("priority_" + element.priority | translateAsync)
+              : element.priority || "-"
+          }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dueDate">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "dueDate" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.dueDate }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="sender">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "sender" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.author }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="content">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "content" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let document">
+        <div class="attachment-list" *ngIf="document?.attachmentDetails && document.attachmentDetails.length > 0">
+          <div class="attachment-item" *ngFor="let attachment of document.attachmentDetails">
+            <a [class]="attachment.fileUrl ? 'file-name' : 'no-file-name'"
+               (click)="downloadAttachment(attachment.fileUrl, attachment.fileName); $event.preventDefault()"
+               href="javascript:void(0)">
+              <i class="pi pi-file mr-1"></i> {{ getShortFileName(attachment.fileName) }}
+            </a>
+          </div>
+        </div>
+        <div class="no-attachment" *ngIf="!document?.attachmentDetails || document.attachmentDetails.length === 0">
+          Không có tệp đính kèm
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="process">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "process" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="d-flex flex-column">
+          <a
+            href="javascript:void(0)"
+            class="text-primary mb-1"
+            (click)="openMoveDialog.emit(element)"
+            >Chuyển</a
+          >
+          <a
+            href="javascript:void(0)"
+            class="text-warning mb-1"
+            (click)="returnDocument(element)"
+            >Trả lại</a
+          >
+          <a
+            href="javascript:void(0)"
+            class="text-danger"
+            (click)="finishDocument(element)"
+            >Kết thúc</a
+          >
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="waitingColumns()"></tr>
+    <tr mat-row *matRowDef="let row; columns: waitingColumns()"></tr>
+  </table>
+
+  @if(waitingDocuments().length === 0) {
+  <div class="text-center my-3">Không có văn bản đến chờ xử lý</div>
+  }
+
+  <mat-paginator
+    [length]="waitingTotalItems()"
+    [pageSize]="waitingPageSize()"
+    [pageSizeOptions]="[3, 5, 10, 25, 100]"
+    [pageIndex]="waitingCurrentPage()"
+    (page)="handleWaitingPageEvent($event)"
+    aria-label="Select page"
+  >
+  </mat-paginator>
+
+  <!-- Finished Documents Section -->
+  <h2 class="mt-4">Văn bản đến đã xử lý</h2>
+  <table
+    mat-table
+    [dataSource]="finishedDocuments()"
+    class="mat-elevation-z8 demo-table"
+  >
+    <ng-container matColumnDef="stt">
+      <th mat-header-cell *matHeaderCellDef>{{ "STT" }}</th>
+      <td mat-cell *matCellDef="let element; let i = index">
+        {{ finishedCurrentPage() * finishedPageSize() + i + 1 }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="documentNumber">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "documentNumber" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.documentNumber }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="receivedDate">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "receivedDate" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.receivedDate }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="documentInfomation">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "documentInfomation" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <ul class="document-details">
+          <li>- Ngày tháng năm phát hành văn bản: {{ element.issuedDate }}</li>
+          <li>- Số văn bản: {{ element.referenceNumber }}</li>
+          <li>- Tác giả: {{ element.author }}</li>
+          <li>- Trích yếu văn bản: {{ element.summary }}</li>
+        </ul>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="priority">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "priority" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span
+          [ngClass]="{
+            'text-danger': element.priority === 'urgent',
+            'text-secondary':
+              !element.priority ||
+              (element.priority !== 'normal' && element.priority !== 'urgent')
+          }"
+        >
+          {{
+            element.priority === "normal" || element.priority === "urgent"
+              ? ("priority_" + element.priority | translateAsync)
+              : element.priority || "-"
+          }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dueDate">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "dueDate" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.dueDate }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="sender">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "sender" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.author }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="content">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "content" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let document">
+        <div class="attachment-list" *ngIf="document?.attachmentDetails && document.attachmentDetails.length > 0">
+          <div class="attachment-item" *ngFor="let attachment of document.attachmentDetails">
+            <a [class]="attachment.fileUrl ? 'file-name' : 'no-file-name'"
+               (click)="downloadAttachment(attachment.fileUrl, attachment.fileName); $event.preventDefault()"
+               href="javascript:void(0)">
+              <i class="pi pi-file mr-1"></i> {{ getShortFileName(attachment.fileName) }}
+            </a>
+          </div>
+        </div>
+        <div class="no-attachment" *ngIf="!document?.attachmentDetails || document.attachmentDetails.length === 0">
+          Không có tệp đính kèm
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="process">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "process" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="d-flex flex-column">
+          <a
+            href="javascript:void(0)"
+            class="text-success"
+            style="pointer-events: none"
+            >Chuyển bổ sung</a
+          >
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="internalRecipient">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "internalRecipient" | translateAsync }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.internalRecipient | recipientLabel }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="finishedColumns()"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: finishedColumns()"
+      [ngClass]="{
+        'highlight-row':
+          row.id === recentlyFinishedDoc() ||
+          row.id === documentService.currentAdd()
+      }"
+      [id]="'doc-' + row.id"
+    ></tr>
+  </table>
+
+  @if(finishedDocuments().length === 0) {
+  <div class="text-center my-3">Không có văn bản đến đã xử lý</div>
+  }
+
+  <mat-paginator
+    [length]="finishedTotalItems()"
+    [pageSize]="finishedPageSize()"
+    [pageSizeOptions]="[3, 5, 10, 25, 100]"
+    [pageIndex]="finishedCurrentPage()"
+    (page)="handleFinishedPageEvent($event)"
+    aria-label="Select page"
+  >
+  </mat-paginator>
+</div>

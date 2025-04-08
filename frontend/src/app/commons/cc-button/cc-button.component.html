@@ -1,0 +1,15 @@
+<div
+  class="cursor-pointer d-flex rounded"
+  [attr.mode]="mode()"
+  (click)="onClick.emit($event)"
+>
+  @if(!src()) {
+  <!-- <img [src]="src" alt="order_logo" class="prefix_logo" /> -->
+  <!-- @if (preffix) {
+  } @else {
+    <img [src]="src" alt="order_logo" class="suffix_logo" />
+  } -->
+  {{ title() | translateAsync }}
+  }
+  <ng-content></ng-content>
+</div>

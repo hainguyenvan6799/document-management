@@ -1,0 +1,11 @@
+<table mat-table [dataSource]="listData()" class="mat-elevation-z8 demo-table">
+  @for(column of columns(); track $index) {
+  <ng-container [matColumnDef]="column"> </ng-container>
+  }
+  <mat-header-row
+    *matHeaderRowDef="['position', 'name', 'weight', 'symbol']"
+  ></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: ['position', 'name', 'weight', 'symbol']"
+  ></mat-row>
+</table>

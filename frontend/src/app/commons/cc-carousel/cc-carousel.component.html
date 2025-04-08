@@ -1,0 +1,5 @@
+<p-carousel [value]="products" [circular]="true" [responsiveOptions]="responsiveOptions" [autoplayInterval]="3000">
+  <ng-template let-product pTemplate="item">
+    <img [src]="product.img" [alt]="product.name" class="slick-carousel" />
+  </ng-template>
+</p-carousel>

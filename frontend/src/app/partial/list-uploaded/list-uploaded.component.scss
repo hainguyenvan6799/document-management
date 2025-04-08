@@ -1,0 +1,7 @@
+@use '../../commons/variable' as *;
+
+:host {
+    .main-container__header {
+        font-size: $biggest-font;
+    }
+}

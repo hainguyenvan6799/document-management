@@ -1,0 +1,11 @@
+<mat-form-field>
+  <mat-label>{{ label() | translateAsync }}</mat-label>
+  <mat-select (valueChange)="onChange($event)" [value]="value()">
+    @for (dropdown of listDropdown(); track $index) {
+    <mat-option [value]="dropdown.value">{{
+      dropdown.label | translateAsync
+    }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+<mat-error>{{ errorMessage() }}</mat-error>

@@ -1,0 +1,6 @@
+@use '../variable' as *;
+
+.mat-button-toggle-appearance-standard.mat-button-toggle-checked {
+    color: $white;
+    background-color: $dark;
+}

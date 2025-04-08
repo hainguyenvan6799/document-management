@@ -1,0 +1,39 @@
+::ng-deep {
+  .product-item {
+    .product-item-content {
+      border: 1px solid var(--surface-d);
+      border-radius: 3px;
+      margin: .3rem;
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .product-image {
+      width: 50%;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
+    }
+  }
+}
+
+.slick-carousel {
+  // object-fit: cover;
+  height: 25rem;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 991px) {
+  :host::ng-deep {
+    #pn_id_1 .p-carousel-item {
+      flex: 1 0 100%;
+    }
+  }
+}
+
+:host::ng-deep {
+  .p-element .p-carousel-content .p-carousel-indicators {
+    margin-top: -3rem !important;
+    z-index: 2;
+  }
+}

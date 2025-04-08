@@ -1,0 +1,203 @@
+@use '../../commons/variable' as *;
+@use '../../../styles.scss' as *;
+@include dancing-script(logo, 900); // Replace with actual values
+
+/*** Navbar Start ***/
+.nav-bar {
+  top: 0;
+  position: fixed;
+  background: transparent;
+  border-bottom: 2px solid rgba(0, 0, 0, .05);
+  z-index: 999;
+  backdrop-filter: blur(10px);
+
+  .navbar-nav {
+    .nav-link {
+
+      font-weight: 500;
+      transition: .5s;
+      display: flex;
+
+      &.active,
+      &:hover {
+        color: $hover !important;
+      }
+    }
+  }
+
+  .nav-item {
+    .menu_child {
+      padding: 24px 15.4% 32px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      pointer-events: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 99;
+      background: #fff;
+      color: #000;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.4s, visibility 0.4s; // Added transition for smooth effect
+    }
+
+    &:hover {
+      .menu_child {
+        top: 6rem;
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto; // Enable pointer events when menu is visible
+        animation: slide-in-top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+    }
+  }
+}
+
+.dropdown .dropdown-menu a:hover {
+  background: var(--bs-primary);
+  color: var(--bs-white);
+}
+
+#searchModal .modal-content {
+  background-color: rgba(255, 255, 255, .95);
+}
+
+/*** Navbar End ***/
+
+.nav-item {
+  text-align: center;
+  font-size: 1.1rem;
+  padding: 17px 16px 17px;
+}
+
+/*** Search Input Start ***/
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  position: relative;
+  max-width: 300px;
+  margin-right: 1rem;
+}
+
+.input {
+  border-style: none;
+  height: 2.8rem;
+  width: 2.8rem;
+  padding: 10px;
+  outline: none;
+  border-radius: 50%;
+  transition: .5s ease-in-out;
+  background-color: $primary;
+  box-shadow: 0px 0px 3px #f3f3f3;
+  padding-right: 40px;
+  color: $dark;
+}
+
+.input::placeholder,
+.input {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 17px;
+}
+
+.input::placeholder {
+  color: #8f8f8f;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0px;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  outline: none;
+  border-style: none;
+  border-radius: 50%;
+  pointer-events: painted;
+  background-color: transparent;
+  transition: .2s linear;
+}
+
+.icon:focus~.input,
+.input:focus {
+  box-shadow: none;
+  width: 250px;
+  border-radius: 0px;
+  background-color: transparent;
+  border-bottom: 3px solid $primary;
+  transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+}
+
+/*** Search Inpout end ***/
+
+/*** Navbar hover start ***/
+
+// @media screen and (max-width: $medium-screen) {
+
+
+.element {
+  position: absolute;
+  top: 0;
+  background-color: #ffffff;
+  padding: 1rem 0;
+  width: 40rem;
+  transition: .1 ease;
+  border-radius: .375rem;
+  box-shadow: 0px 0px 3px #d6d6d6;
+}
+
+/*** Navbar hover end ***/
+.slide-in-left {
+  animation: slide-in-left .5s cubic-bezier(.25, .46, .45, .94) both
+}
+
+.menu_child {
+  box-sizing: border-box;
+  padding: 1rem;
+  width: 100%;
+  opacity: .8;
+
+  .lv2_title {
+    width: 100%;
+
+    .child {
+      &:hover {
+        color: $hover;
+      }
+    }
+  }
+}
+
+// }
+
+@keyframes slide-in-left {
+  0% {
+    transform: translateX(-3rem);
+    opacity: 0
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1
+  }
+}
+
+@keyframes slide-in-top {
+  0% {
+    transform: translateY(3rem);
+    opacity: 0
+  }
+
+  100% {
+    transform: translateY(-1rem);
+    opacity: .9
+  }
+}

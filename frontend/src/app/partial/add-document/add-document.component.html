@@ -1,0 +1,143 @@
+<div class="main-container p-3">
+  <mat-label
+    class="main-container__header"
+    >{{ `${documentTitle()} công văn đến` }}</mat-label
+  >
+  <div class="main-container__formInput p-3">
+    <div class="row">
+      <div class="col-3">
+        <cc-date-picker
+          [value]="body().receivedDate"
+          [errorMessage]="(this.error()?.['receivedDate']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('receivedDate', $event)"
+          label="receivedDate"
+        />
+      </div>
+      <div class="col-3">
+        <cc-date-picker
+          [value]="body().issuedDate"
+          [errorMessage]="(this.error()?.['issuedDate']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('issuedDate', $event)"
+          label="issuedDate"
+        />
+      </div>
+      <div class="col-3">
+        <cc-input
+          [value]="body().referenceNumber"
+          [errorMessage]="(this.error()?.['referenceNumber']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('referenceNumber', $event)"
+          label="referenceNumber"
+        />
+      </div>
+      <div class="col-3">
+        <cc-dropdown
+          [listDropdown]="dropdown().priority"
+          [value]="body().priority"
+          [errorMessage]="(this.error()?.['priority']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('priority', $event)"
+          label="priority"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <cc-dropdown
+          [listDropdown]="dropdown().documentType"
+          [value]="body().type"
+          (valueChange)="onChange('type', $event)"
+          [errorMessage]="(this.error()?.['type']?.[0]?.code | translateAsync) ?? ''"
+          label="type"
+        />
+      </div>
+      <div class="col-3">
+        <cc-input
+          [value]="body().author"
+          [errorMessage]="(this.error()?.['author']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('author', $event)"
+          label="author"
+        />
+      </div>
+      <div class="col-3">
+        <cc-input
+          [value]="body().summary"
+          [errorMessage]="(this.error()?.['summary']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('summary', $event)"
+          label="summary"
+        />
+      </div>
+      <div class="col-3">
+        <cc-dropdown
+          [listDropdown]="dropdown().receivingMethod"
+          [value]="body().receivingMethod"
+          [errorMessage]="(this.error()?.['receivingMethod']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('receivingMethod', $event)"
+          label="receivingMethod"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <cc-date-picker
+          [value]="body().dueDate"
+          [errorMessage]="(this.error()?.['dueDate']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('dueDate', $event)"
+          label="dueDate"
+        />
+      </div>
+      <div class="col-3">
+        <cc-input
+          [value]="body().processingOpinion"
+          [errorMessage]="(this.error()?.['processingOpinion']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('processingOpinion', $event)"
+          label="processingOpinion"
+        />
+      </div>
+      @if(isEditDocument()) {
+      <div class="col-3">
+        <cc-dropdown
+          [listDropdown]="dropdown().internalRecipient"
+          [value]="body().internalRecipient ?? ''"
+          [errorMessage]="(this.error()?.['internalRecipient']?.[0]?.code | translateAsync) ?? ''"
+          (valueChange)="onChange('internalRecipient', $event)"
+          label="internalRecipient"
+        />
+      </div>
+      }
+    </div>
+    @if(!isEditDocument()) {
+    <div class="col-6 d-flex file-upload">
+      <p-fileupload
+        #fu
+        [showUploadButton]="false"
+        [multiple]="true"
+        mode="advanced"
+        [chooseLabel]="('choose' | translateAsync) ?? ''"
+        [cancelLabel]="('cancelAll' | translateAsync) ?? ''"
+        chooseIcon="pi pi-upload"
+        [name]="this.body().attachments"
+        maxFileSize="1000000"
+        (onSelect)="onUpload($event)"
+        (onClear)="onRemove()"
+      />
+    </div>
+
+    } @else {
+    <hr />
+    <app-list-uploaded
+      [listData]="body().attachments"
+      [columns]="['Stt', 'Tên File']"
+      documentType="incoming-document"
+    />
+    }
+    <div class="button d-flex justify-content-end p-2">
+      <cc-button
+        mode="secondary"
+        title="cancel"
+        (onClick)="cancel()"
+      ></cc-button>
+      <cc-button title="save" (onClick)="save()"></cc-button>
+    </div>
+  </div>
+</div>
+
+<p-toast />

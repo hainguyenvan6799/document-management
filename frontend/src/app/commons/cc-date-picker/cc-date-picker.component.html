@@ -1,0 +1,24 @@
+<div class="position-relative">
+  <mat-form-field [floatLabel]="floatLabel()" [class.required]="required()">
+    <mat-label>{{ label() | translateAsync }}</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [autocomplete]="autocomplete()"
+      [formControl]="date()"
+      (dateChange)="onChangeDate($event)"
+      (blur)="onBlur()"
+    />
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  @if (formatError) {
+  <mat-error class="inputErrorMessage errMessage ct-date-picker">{{
+    formatError
+  }}</mat-error>
+  } @else {
+  <mat-error class="inputErrorMessage errMessage ct-date-picker">{{
+    errorMessage()
+  }}</mat-error>
+  }
+</div>

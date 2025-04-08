@@ -1,0 +1,187 @@
+.main-container {
+  &__header {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  &__formInput {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  &__result {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+  }
+
+  &__no-result {
+    .alert {
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .alert-info {
+      background-color: #e1f5fe;
+      color: #0277bd;
+      border: 1px solid #b3e5fc;
+    }
+  }
+}
+
+.attachment-list {
+  display: flex;
+  flex-direction: column;
+  
+  .attachment-item {
+    margin-bottom: 3px;
+    
+    .file-name {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.9em;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #2196F3;
+      cursor: pointer;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+        color: #0d8aee;
+      }
+    }
+  }
+  
+  .attachment-count {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 2px;
+  }
+}
+
+.no-attachment {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+:host ::ng-deep {
+  .p-button.p-button-text {
+    padding: 0.25rem;
+    
+    &:hover {
+      background-color: rgba(33, 150, 243, 0.1);
+    }
+  }
+
+  .p-tooltip {
+    opacity: 1 !important;
+    z-index: 9999 !important;
+  }
+
+  .custom-tooltip {
+    max-width: 300px;
+    background-color: #323232;
+    color: white;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 12px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+    word-break: break-word;
+    z-index: 9999 !important;
+  }
+
+  .p-datatable-wrapper {
+    overflow-x: auto;
+  }
+
+  .p-datatable .p-datatable-thead > tr > th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+  }
+
+  .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: #e9ecef;
+  }
+}
+
+.demo-table {
+  width: 100%;
+  margin-top: 16px;
+  
+  .mat-mdc-header-row {
+    background-color: #f8f9fa;
+  }
+  
+  .mat-mdc-header-cell {
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+    
+    .sort-icon {
+      margin-left: 5px;
+      opacity: 0.7;
+      
+      i {
+        font-size: 12px;
+        color: #2196F3;
+      }
+    }
+  }
+  
+  .mat-mdc-row:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  .mat-mdc-row:hover {
+    background-color: #e9ecef;
+  }
+  
+  .mat-mdc-cell {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+.table-container {
+  position: relative;
+  
+  .loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+  
+  // Style for the paginator
+  .mat-mdc-paginator {
+    background-color: #f8f9fa;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+}

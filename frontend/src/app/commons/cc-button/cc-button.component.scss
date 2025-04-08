@@ -1,0 +1,39 @@
+@use '../variable' as *;
+@use '../animation' as animation;
+
+:host {
+  div {
+    width: 100%;
+    font-weight: $bigger-font;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem;
+    &:hover {
+      transition: 0.2s ease-in;
+      // background-color: $dark;
+      // color: $primary;
+    }
+    &[mode='primary'] {
+    background-color: $dark;
+    color: $white;
+  }
+&[mode='secondary'] {
+  background-color: $white;
+  color: $dark;
+  border: 1px solid $dark;
+  border-radius: 5px;
+
+}
+  }
+  .prefix_logo {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 5px;
+  }
+  .suffix_logo {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: 5px;
+  }
+
+}

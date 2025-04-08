@@ -1,0 +1,201 @@
+<div class="main-container p-3">
+  <mat-label class="main-container__header">Tìm kiếm văn bản</mat-label>
+  
+  <!-- Form tìm kiếm -->
+  <div class="main-container__formInput p-3">
+    <div class="row">
+      <div class="col-4">
+        <div class="mb-3">
+          <cc-select
+            #selectDocumentType
+            label="Loại văn bản"
+            [options]="documentTypeOptions"
+            [defaultValue]="searchParams().documentType || 'incoming-document'"
+            (valueChange)="onChange('documentType', $event)"
+          ></cc-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="mb-3">
+          <div class="d-flex gap-3">
+            <div class="col">
+              <cc-date-picker
+                #datePickerFrom
+                (valueChange)="onChange('issuedDateFrom', $event || '')"
+                label="Ngày văn bản từ"
+                [format]="'DD/MM/YYYY'"
+                [value]="searchParams().issuedDateFrom || ''"
+              ></cc-date-picker>
+            </div>
+            <div class="col">
+              <cc-date-picker
+                #datePickerTo
+                (valueChange)="onChange('issuedDateTo', $event || '')"
+                label="Đến ngày"
+                [format]="'DD/MM/YYYY'"
+                [value]="searchParams().issuedDateTo || ''"
+              ></cc-date-picker>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="mb-3">
+          <cc-input
+            #inputNumber
+            (valueChange)="onChange('referenceNumber', $event || '')"
+            label="Số ký hiệu"
+            [value]="searchParams().referenceNumber || ''"
+          ></cc-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="mb-3">
+          <cc-input
+            #inputAuthor
+            (valueChange)="onChange('author', $event || '')"
+            label="Tác giả"
+            [value]="searchParams().author || ''"
+          ></cc-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="mb-3">
+          <cc-input
+            #inputSummary
+            (valueChange)="onChange('summary', $event || '')"
+            label="Trích yếu"
+            [value]="searchParams().summary || ''"
+          ></cc-input>
+        </div>
+      </div>
+    </div>
+    <div class="button d-flex justify-content-end gap-2 p-2">
+      <cc-button title="Đặt lại" (onClick)="reset()" variant="secondary"></cc-button>
+      <cc-button title="Tìm kiếm" (onClick)="onChangeSearch()"></cc-button>
+    </div>
+  </div>
+
+  <!-- Bảng hiển thị kết quả - chỉ hiển thị khi có kết quả và đã tìm kiếm -->
+  <div class="main-container__result mt-3" *ngIf="hasSearched && paginatedDocuments().length > 0">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h3>Bảng hiển thị kết quả tìm kiếm</h3>
+      <div class="d-flex gap-2">
+        <cc-button title="Xuất Excel" mode="primary" (onClick)="exportToExcel()"></cc-button>
+        <cc-button title="Xuất Word" mode="secondary" (onClick)="exportToWord()"></cc-button>
+      </div>
+    </div>
+    
+    <div class="table-container">
+      <table mat-table [dataSource]="paginatedDocuments()" class="mat-elevation-z8 demo-table">
+        <!-- Cột STT -->
+        <ng-container matColumnDef="stt">
+          <th mat-header-cell *matHeaderCellDef>TT</th>
+          <td mat-cell *matCellDef="let document; let i = index">{{ pageIndex() * pageSize() + i + 1 }}</td>
+        </ng-container>
+
+        <!-- Cột Số đến (chỉ hiển thị cho văn bản đến) -->
+        <ng-container matColumnDef="documentNumber">
+          <th mat-header-cell *matHeaderCellDef>Số đến</th>
+          <td mat-cell *matCellDef="let document">{{ document?.documentNumber || '' }}</td>
+        </ng-container>
+
+        <!-- Cột Ngày đến (chỉ hiển thị cho văn bản đến) -->
+        <ng-container matColumnDef="receivedDate">
+          <th mat-header-cell *matHeaderCellDef>Ngày đến</th>
+          <td mat-cell *matCellDef="let document">
+            <ng-container *ngIf="document?.receivedDate">
+              {{ document.receivedDate }}
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <!-- Cột Số ký hiệu -->
+        <ng-container matColumnDef="referenceNumber">
+          <th mat-header-cell *matHeaderCellDef>Số ký hiệu</th>
+          <td mat-cell *matCellDef="let document">{{ document?.referenceNumber || '' }}</td>
+        </ng-container>
+
+        <!-- Cột Ngày văn bản -->
+        <ng-container matColumnDef="issuedDate">
+          <th mat-header-cell *matHeaderCellDef>
+            Ngày văn bản
+            <span class="sort-icon">
+              <i class="pi pi-sort-up" title="Sắp xếp tăng dần"></i>
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let document">
+            <ng-container *ngIf="document?.issuedDate">
+              {{ document.issuedDate }}
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <!-- Cột Hạn xử lý (chỉ hiển thị cho văn bản đến) -->
+        <ng-container matColumnDef="dueDate">
+          <th mat-header-cell *matHeaderCellDef>Hạn xử lý</th>
+          <td mat-cell *matCellDef="let document">
+            <ng-container *ngIf="document?.dueDate">
+              {{ document.dueDate }}
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <!-- Cột Tác giả -->
+        <ng-container matColumnDef="author">
+          <th mat-header-cell *matHeaderCellDef>Tác giả</th>
+          <td mat-cell *matCellDef="let document">{{ document?.author || document?.signedBy || '' }}</td>
+        </ng-container>
+
+        <!-- Cột Trích yếu -->
+        <ng-container matColumnDef="summary">
+          <th mat-header-cell *matHeaderCellDef>Trích yếu</th>
+          <td mat-cell *matCellDef="let document">{{ document?.summary || '' }}</td>
+        </ng-container>
+
+        <!-- Cột File đính kèm -->
+        <ng-container matColumnDef="attachments">
+          <th mat-header-cell *matHeaderCellDef>Nội dung</th>
+          <td mat-cell *matCellDef="let document">
+            <div class="attachment-list" *ngIf="document?.attachmentDetails && document.attachmentDetails.length > 0">
+              <div class="attachment-item" *ngFor="let attachment of document.attachmentDetails">
+                <a class="file-name" 
+                   (click)="downloadAttachment(attachment.fileUrl, attachment.fileName); $event.preventDefault()"
+                   href="javascript:void(0)">
+                  <i class="pi pi-file mr-1"></i> {{ getShortFileName(attachment.fileName) }}
+                </a>
+              </div>
+            </div>
+            <div class="no-attachment" *ngIf="!document?.attachmentDetails || document.attachmentDetails.length === 0">
+              Không có tệp đính kèm
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+      </table>
+      
+      <!-- Thêm phân trang -->
+      <mat-paginator
+        [length]="totalItems()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="pageIndex()"
+        (page)="onPageChange($event)"
+        aria-label="Chọn trang">
+      </mat-paginator>
+    </div>
+  </div>
+  
+  <!-- Hiển thị thông báo khi đã tìm kiếm nhưng không có kết quả -->
+  <div class="main-container__no-result mt-3" *ngIf="hasSearched && paginatedDocuments().length === 0">
+    <div class="alert alert-info">
+      Không tìm thấy kết quả nào phù hợp với tiêu chí tìm kiếm.
+    </div>
+  </div>
+</div>

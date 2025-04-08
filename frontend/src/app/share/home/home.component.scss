@@ -1,0 +1,36 @@
+@use '../../commons/variable' as *;
+
+table thead tr{
+    background-color: $dark !important;
+    color: $white;
+}
+
+.dialog-content-wrapper {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+
+  cc-radio-group {
+    margin-bottom: 1rem;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+/* Styling cho RadioGroup */
+::ng-deep .mat-mdc-radio-button {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Fix dialog header căn giữa nội dung */
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__title {
+  padding: 0 !important;
+}

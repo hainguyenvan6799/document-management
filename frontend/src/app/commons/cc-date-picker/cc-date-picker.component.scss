@@ -1,0 +1,86 @@
+@use '../variable' as *;
+
+:host::ng-deep {
+  mat-form-field {
+    width: 100%;
+    margin-top: 2px;
+    margin-bottom: -15px;
+    .mdc-text-field--filled {
+      padding: 0;
+      &:not(.mdc-text-field--disabled) {
+        background-color: inherit;
+        .mat-form-field-outline {
+          color: $dark;
+        }
+        .mat-mdc-form-field-flex {
+          border-bottom: 1px solid $dark;
+        }
+        .mdc-line-ripple::after {
+          border: none;
+        }
+      }
+      &.mdc-text-field--disabled {
+        background-color: inherit;
+        label mat-label {
+          font-size: 18px;
+          font-weight: 600;
+        }
+        .mat-mdc-form-field-flex {
+          border-bottom: 1px solid $dark;
+        }
+      }
+    }
+    .mat-form-field-underline {
+      background-color: $dark !important;
+    }
+    .mat-mdc-form-field-icon-suffix  button{
+        color: $dark;
+        }
+    }
+  .required mat-label::before {
+    content: ' * ';
+    color: $red;
+  }
+}
+
+::ng-deep {
+  mat-datepicker-content {
+    scale: 0.9;
+    mat-month-view,
+    mat-year-view,
+    mat-multi-year-view {
+      .mat-calendar-body-cell.mat-calendar-body-active {
+        &[aria-pressed='true'] {
+          &:hover {
+            .mat-calendar-body-today,
+            .mat-calendar-body-cell-content.mat-focus-indicator.mat-calendar-body-selected {
+              background-color: $dark !important;
+            }
+          }
+          .mat-calendar-body-selected.mat-calendar-body-today,
+          .mat-focus-indicator {
+            color: $white;
+            border: none;
+          }
+        }
+        &[aria-pressed='false'] {
+          .mat-calendar-body-cell-content.mat-focus-indicator {
+            background-color: $white !important;
+          }
+          .mat-calendar-body-today {
+            background-color: $dark !important;
+          }
+          .mat-focus-indicator {
+            color: $dark;
+          }
+        }
+      }
+    }
+  }
+}
+div .ct-date-picker {
+  position: absolute;
+  top: 90%;
+  left: 0;
+  width: 100%;
+}

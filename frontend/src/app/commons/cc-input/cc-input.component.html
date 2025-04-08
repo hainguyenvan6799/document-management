@@ -1,0 +1,16 @@
+<mat-form-field class="example-full-width">
+  <mat-label>{{ label() | translateAsync }}</mat-label>
+  <input
+    [ngModel]="value()"
+    (ngModelChange)="onValueChange($event)"
+    matInput
+    [disabled]="isDisabled()"
+    [required]="require()"
+    autocomplete="on"
+    [type]="type()"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [maxLength]="maxLength()"
+  />
+</mat-form-field>
+<mat-error>{{ errorMessage() }}</mat-error>

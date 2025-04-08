@@ -1,0 +1,23 @@
+<mat-label class="main-container__header">Danh sách File đã tải lên</mat-label>
+<table mat-table [dataSource]="listData()" class="mat-elevation-z8">
+  @for (column of columns(); track $index) {
+  <ng-container [matColumnDef]="column">
+    <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+    <td mat-cell *matCellDef="let element; let rowIndex = index">
+      @if (column === 'Stt') {
+      {{ rowIndex + 1 }}
+      } @else {
+      <a
+        class="cursor-pointer"
+        title="Nhấn để tải"
+        (click)="downLoadFile(element)"
+        >{{ element }}</a
+      >
+      }
+    </td>
+  </ng-container>
+  }
+
+  <tr mat-header-row *matHeaderRowDef="columns()"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns()"></tr>
+</table>

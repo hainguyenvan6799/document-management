@@ -1,0 +1,62 @@
+@use '../variable';
+@use '../../../styles.scss' as *;
+
+.inputGroup {
+  margin: 1em 0 1em 0;
+  // position: relative;
+}
+:host {
+  width: 100%;
+}
+
+.inputGroup input {
+  font-size: 100%;
+  padding: 0.8em;
+  outline: none;
+  border: 2px solid rgb(200, 200, 200);
+  background-color: transparent;
+  border-radius: 5px;
+  // width: 100%;
+}
+
+.inputGroup label {
+  font-size: 100%;
+  position: absolute;
+  left: 0;
+  padding: 0.8em;
+  margin-left: 0.5em;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  color: rgb(100, 100, 100);
+}
+
+.inputGroup :is(input:focus, input:valid) ~ label {
+  transform: translateY(-50%) scale(0.9);
+  margin: 0em;
+  margin-left: 1.3em;
+  padding: 0.4em;
+  @include bg-color-input(white);
+}
+
+.inputGroup :is(input:focus, input:valid) {
+  border-color: rgb(150, 150, 200);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+.mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: -20px;
+  background-color: inherit;
+  div.mat-mdc-text-field-wrapper.mdc-text-field.mdc-text-field--filled{
+    --mdc-filled-text-field-container-color: white;
+  }
+}

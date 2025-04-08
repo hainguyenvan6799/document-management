@@ -1,0 +1,23 @@
+@use '../../commons/variable' as *;
+
+:host {
+    overflow: hidden;
+    border: 1px solid black;
+
+    .main-container__header {
+        font-size: $biggest-font;
+    }
+
+    cc-button {
+        margin: 0 5px;
+    }
+
+    .main-container__formInput {
+        border: 1px solid $header;
+        border-radius: 5px;
+    }
+
+    .file-upload {
+        margin-top: 1rem;
+    }
+}

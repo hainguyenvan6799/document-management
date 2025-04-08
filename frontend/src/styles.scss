@@ -1,0 +1,151 @@
+@use './app/commons/variable' as *;
+@use './app/commons/material';
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+ul li {
+  list-style-type: none;
+}
+
+// Define a mixin with placeholders for uniquifier and weight
+@mixin dancing-script($uniquifier, $weight) {
+  .dancing-script-#{$uniquifier} {
+    font-family: "Dancing Script", cursive;
+    font-optical-sizing: auto;
+    font-weight: $weight;
+    font-style: normal;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+
+.py-6 {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+@mixin bg-color-input($bg-color) {
+  background-color: $bg-color;
+}
+
+// @mixin responsive-hide($size) {
+//   $breakpoint-value: map-get($breakpoints, $size);
+
+//   @if $size =='xs' or $size =='md' or $size =='sm' {
+//     @media screen and (max-width: $breakpoint-value) {
+//       & {
+//         display: none !important;
+//       }
+//     }
+//   }
+
+//   @else {
+//     @media screen and (min-width: $breakpoint-value) {
+//       & {
+//         display: none !important;
+//       }
+//     }
+//   }
+// }
+
+// .hidden-xs {
+//   @include responsive-hide(xs);
+// }
+
+// .hidden-sm {
+//   @include responsive-hide(xs);
+// }
+
+// .hidden-md {
+//   @include responsive-hide(md);
+// }
+
+// .hidden-lg {
+//   @include responsive-hide(lg)
+// }
+
+// .hidden-xl {
+//   @include responsive-hide(xl)
+// }
+
+// .hidden-xxl {
+//   @include responsive-hide(xl)
+// }
+
+app-cc-select {
+  width: 100%;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+
+  &:hover {
+    color: #ea8025;
+  }
+}
+
+/* Add global styles for dialog */
+.mat-mdc-dialog-container .mdc-dialog__title {
+  padding: 0 !important;
+}
+
+.mat-mdc-dialog-container .dialog-content-wrapper {
+  padding: 1rem;
+  min-width: 300px;
+}
+
+.mat-mdc-dialog-container .text-center {
+  text-align: center;
+}
+
+.mat-mdc-dialog-container .mt-4 {
+  margin-top: 1.5rem;
+}
+
+/* Global styling for RadioGroup in dialogs */
+.mat-mdc-dialog-container .mat-mdc-radio-button {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Ensure vertical centering for dialog titles */
+.mat-mdc-dialog-container .dialog-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+}
+
+.mat-mdc-dialog-container .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  height: 100%;
+}
+
+cc-dropdown,
+cc-input {
+  mat-form-field {
+    width: 100%;
+    margin-bottom: -20px;
+
+    .mat-mdc-text-field-wrapper {
+      padding-left: 0 !important;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+<div mat-dialog-title class="dialog-title">
+  <p class="header">
+    @switch (templateType) { @case (TEMPLATE_TYPE.TABLE_VIEW) {
+    <span>{{ title | translateAsync }}</span>
+    <span (click)="onClose($event)">X</span>
+    } @case (TEMPLATE_TYPE.LITE) {
+    <span>{{ title | translateAsync }}</span>
+    } }
+  </p>
+</div>
+
+<mat-dialog-content class="dialog_content">
+  <div [ngClass]="{ box_content: templateType === TEMPLATE_TYPE.TABLE_VIEW }">
+    <ng-container *ngTemplateOutlet="tempDialog"></ng-container>
+  </div>
+</mat-dialog-content>
