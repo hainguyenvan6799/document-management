@@ -21,3 +21,20 @@
         margin-top: 1rem;
     }
 }
+
+::ng-deep {
+
+    .mat-form-field-appearance-outline .mdc-notched-outline__leading,
+    .mat-form-field-appearance-outline .mdc-notched-outline__notch,
+    .mat-form-field-appearance-outline .mdc-notched-outline__trailing {
+        border: none !important;
+    }
+
+    .mat-form-field-appearance-outline .mdc-notched-outline {
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: 1px solid $dark;
+        /* Keep bottom line */
+    }
+}

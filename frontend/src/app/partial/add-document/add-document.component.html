@@ -94,12 +94,14 @@
       </div>
       @if(isEditDocument()) {
       <div class="col-3">
-        <cc-dropdown
-          [listDropdown]="dropdown().internalRecipient"
-          [value]="body().internalRecipient ?? ''"
-          [errorMessage]="(this.error()?.['internalRecipient']?.[0]?.code | translateAsync) ?? ''"
-          (valueChange)="onChange('internalRecipient', $event)"
-          label="internalRecipient"
+        <cc-mat-select
+          [value]="body().internalRecipients"
+          [options]="dropdown().internalRecipients"
+          [multiple]="true"
+          [label]="'Chọn nơi nhận'"
+          [placeholder]="'Chọn...'"
+          [appearance]="'outline'"
+          (selectionChange)="onChange('internalRecipients', $event)"
         />
       </div>
       }
@@ -113,10 +115,10 @@
         [chooseLabel]="('choose' | translateAsync) ?? ''"
         [cancelLabel]="('cancelAll' | translateAsync) ?? ''"
         chooseIcon="pi pi-upload"
-        [name]="this.body().attachments"
         maxFileSize="1000000"
         (onSelect)="onUpload($event)"
         (onClear)="onRemove()"
+        [files]="files()"
       />
     </div>
     @if(isEditDocument()) {
@@ -135,7 +137,7 @@
         title="cancel"
         (onClick)="cancel()"
       ></cc-button>
-      <cc-button title="save" (onClick)="save()"></cc-button>
+      <cc-button title="save" (onClick)="save$()"></cc-button>
     </div>
   </div>
 </div>

@@ -14,11 +14,13 @@ import _ from 'lodash';
 import { MessageService } from 'primeng/api';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
+import { mergeMap, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CcButtonComponent } from '../../commons/cc-button/cc-button.component';
 import { CcDatePickerComponent } from '../../commons/cc-date-picker/cc-date-picker.component';
 import { CcDropdownComponent } from '../../commons/cc-dropdown/cc-dropdown.component';
 import { CcInputComponent } from '../../commons/cc-input/cc-input.component';
+import { CcMatSelectComponent } from '../../commons/cc-mat-select/cc-mat-select.component';
 import { DocumentService } from '../../services/document.service';
 import { HttpClientService } from '../../services/http-client.service';
 import { MESSAGE_CODES, MOVE_CV } from '../../share/constant';
@@ -37,6 +39,7 @@ export type Dropdown = { label: string; value: string | null }[];
     CcDropdownComponent,
     L10nTranslateAsyncPipe,
     ListUploadedComponent,
+    CcMatSelectComponent,
   ],
   providers: [MessageService],
   templateUrl: './add-document.component.html',
@@ -60,7 +63,7 @@ export class AddDocumentComponent {
     dueDate: '',
     processingOpinion: '',
     attachments: '',
-    internalRecipient: '',
+    internalRecipients: [],
   };
   body: WritableSignal<{
     documentNumber?: string;
@@ -75,14 +78,14 @@ export class AddDocumentComponent {
     dueDate: string;
     processingOpinion: string;
     attachments: string;
-    internalRecipient?: string;
+    internalRecipients?: string[];
   }> = signal(this.emptyBody);
   error: WritableSignal<any> = signal({});
   dropdown: Signal<{
     documentType: Dropdown;
     priority: Dropdown;
     receivingMethod: Dropdown;
-    internalRecipient: Dropdown;
+    internalRecipients: Dropdown;
   }> = signal({
     documentType: [
       { label: 'Báo cáo', value: 'report' },
@@ -99,7 +102,7 @@ export class AddDocumentComponent {
       { label: 'Giấy', value: 'letter' },
       { label: 'Điện tử', value: 'email' },
     ],
-    internalRecipient: [
+    internalRecipients: [
       { label: MOVE_CV.CBQL, value: 'management-staff' },
       { label: MOVE_CV.GIAO_VIEN, value: 'teacher' },
       { label: MOVE_CV.NHAN_VIEN, value: 'staff' },
@@ -108,7 +111,7 @@ export class AddDocumentComponent {
   upload: Signal<FileUpload> = viewChild.required('fu');
   files: WritableSignal<File[]> = signal([]);
   id = computed(() => this.route.snapshot.paramMap.get('id'));
-  isEditDocument = computed(() => this.id());
+  isEditDocument = computed(() => this.id() !== null);
   documentTitle: Signal<string> = computed(() =>
     this.isEditDocument() ? 'Sửa' : 'Tạo'
   );
@@ -120,15 +123,63 @@ export class AddDocumentComponent {
     });
   }
 
-  onChange(key: string, value: string) {
+  onChange(key: string, value: any) {
     this.body.update((prev) => {
       const old = _.cloneDeep(prev);
-      _.set(old, [key], value);
+      if (key === 'internalRecipients') {
+        _.set(old, [key], value.value);
+      } else {
+        _.set(old, [key], value);
+      }
       return old;
     });
   }
-  save() {
-    this.isEditDocument() ? this.patchDocument$() : this.saveDocument$();
+  save$() {
+    if (this.isEditDocument()) {
+      console.log(this.isEditDocument(), this.id());
+      return this.patchDocument$()
+        .pipe(
+          mergeMap((data: any) => {
+            if (data.message === MESSAGE_CODES.VALIDATION_FAILED) {
+              this.error.set(data.errors);
+              return of(null);
+            }
+            this.documentService.currentAdd.set(data.document.id);
+            const docNumber = data.document.documentNumber;
+            if (!docNumber) return of(null);
+            return this.patchFile$(data.document.documentNumber);
+          })
+        )
+        .subscribe({
+          next: (data) => {
+            if (!data) return;
+            this.body.set(this.emptyBody);
+            this.error.set({});
+            this.router.navigateByUrl('');
+          },
+        });
+    }
+    return this.saveDocument$()
+      .pipe(
+        mergeMap((data: any) => {
+          if (data.message === MESSAGE_CODES.VALIDATION_FAILED) {
+            this.error.set(data.errors);
+            return of(null);
+          }
+          this.documentService.currentAdd.set(data.document.id);
+          const docNumber = data.document.documentNumber;
+          if (!docNumber) return of(null);
+          return this.patchFile$(data.document.documentNumber);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          if (!data) return;
+          this.body.set(this.emptyBody);
+          this.error.set({});
+          this.router.navigateByUrl('');
+        },
+      });
   }
   onUpload(event: any) {
     this.files.set(event.currentFiles);
@@ -140,91 +191,38 @@ export class AddDocumentComponent {
     this.router.navigate(['../']);
   }
   patchDocument$() {
-    const body = new FormData();
-    for (const file of this.files()) {
-      if (!file) return;
-      body.append('attachments', file);
-    }
-
-    const jsonBody: any = _.cloneDeep(this.body());
-    for (const key in jsonBody) {
-      if (jsonBody.hasOwnProperty(key)) {
-        body.append(key, jsonBody[key]);
-      }
-    }
-    body.set('status', 'finished');
-
-    return this.httpCientService
-      .commonPatch({
-        url: `${environment.RESOURCE_URL}/incoming-documents/${
-          this.body().documentNumber
-        }`,
-        body,
-      })
-      .subscribe({
-        next: (data: any) => {
-          if (data.message === MESSAGE_CODES.VALIDATION_FAILED) {
-            this.error.set(data.errors);
-            return;
-          }
-          this.documentService.currentAdd.set(data.document.id);
-          this.body.set(this.emptyBody);
-          this.error.set({});
-          this.router.navigateByUrl('');
-        },
-        error: ({ error }) => {
-          this.error.set(error.errors);
-        },
-      });
+    return this.httpCientService.commonPatch({
+      url: `${environment.RESOURCE_URL}/incoming-documents/${
+        this.body().documentNumber
+      }`,
+      body: {
+        ...this.body(),
+        status: 'finished',
+      },
+    });
   }
   saveDocument$() {
-    const body = new FormData();
-    for (const file of this.files()) {
-      if (!file) return;
-      body.append('attachments', file);
-    }
-
-    const jsonBody: any = _.cloneDeep(this.body());
-    for (const key in jsonBody) {
-      if (jsonBody.hasOwnProperty(key)) {
-        body.append(key, jsonBody[key]);
-      }
-    }
-    return this.httpCientService
-      .comonPost({
-        url: `${environment.RESOURCE_URL}/incoming-documents`,
-        body,
-      })
-      .subscribe({
-        next: (data: any) => {
-          if (data.message === MESSAGE_CODES.VALIDATION_FAILED) {
-            this.error.set(data.errors);
-            return;
-          }
-          this.body.set(this.emptyBody);
-          this.error.set({});
-          this.files.set([]);
-          this.upload().clear();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success Message',
-            detail: 'Thêm công văn thành công',
-          });
-        },
-        error: ({ error }) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Something went wrong',
-          });
-          this.error.set(error.errors);
-        },
-      });
+    return this.httpCientService.comonPost({
+      url: `${environment.RESOURCE_URL}/incoming-documents`,
+      body: _.omit(this.body(), 'attachments'),
+    });
   }
   getDocument() {
     if (!this.id()) return;
     return this.documentService.getDocument$({
       documentNumber: this.id() as string,
+    });
+  }
+
+  patchFile$(documentId: string) {
+    const body = new FormData();
+    if (!this.files().length) return of(this.body().attachments);
+    for (const file of this.files()) {
+      body.append('attachments', file);
+    }
+    return this.httpCientService.commonPatch({
+      url: `${environment.RESOURCE_URL}/incoming-documents/${documentId}`,
+      body,
     });
   }
 }
