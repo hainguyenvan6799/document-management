@@ -39,7 +39,7 @@ export class HttpClientService {
       .patch(url, body, { headers: baseHeaders })
       .pipe(finalize(() => this.loading.set(false)));
   }
-  commonDelete(props: { url: string; headers: {}; params: {} }) {
+  commonDelete(props: { url: string; headers?: {}; params?: {} }) {
     const { url, headers, params } = props;
     this.loading.set(true);
     return this.httpClient

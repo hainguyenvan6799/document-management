@@ -13,10 +13,10 @@ import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { L10nTranslateAsyncPipe } from 'angular-l10n';
 import { MessageService } from 'primeng/api';
+import { AttachmentDetail } from '../../../commons/constants';
 import { DocumentService } from '../../../services/document.service';
 import { MOVE_CV } from '../../constant';
 import { RecipientLabelPipe } from '../../pipes/recipient-label.pipe';
-import { AttachmentDetail } from '../../../commons/constants';
 
 @Component({
   selector: 'app-outgoing-document',
@@ -27,7 +27,7 @@ import { AttachmentDetail } from '../../../commons/constants';
     MatPaginatorModule,
     L10nTranslateAsyncPipe,
     RecipientLabelPipe,
-    NgClass
+    NgClass,
   ],
   templateUrl: './outgoing-document.component.html',
   styleUrl: './outgoing-document.component.scss',
@@ -133,7 +133,7 @@ export class OutgoingDocumentComponent implements OnInit {
 
   ngOnInit() {
     this.loadOutgoingDocuments();
-    
+
     // Check if there's a document to highlight from the document service
     if (this.documentService.currentAdd()) {
       this.goToDocument(this.documentService.currentAdd());
@@ -147,7 +147,9 @@ export class OutgoingDocumentComponent implements OnInit {
           const { documents } = response.data;
 
           // Enhance documents with attachment information
-          const enhancedDocuments = await Promise.all(documents.map((doc: any) => this.mappingDataForDisplaying(doc)));
+          const enhancedDocuments = await Promise.all(
+            documents.map((doc: any) => this.mappingDataForDisplaying(doc))
+          );
 
           // Store all documents
           this.allDocuments.set(enhancedDocuments);
@@ -180,29 +182,32 @@ export class OutgoingDocumentComponent implements OnInit {
     return {
       ...document,
       attachmentDetails: attachmentData,
-    }
+    };
   }
 
-  private async getAttachmentUrls(attachments: string[] | undefined): Promise<AttachmentDetail[]> {
+  private async getAttachmentUrls(
+    attachments: string[] | undefined
+  ): Promise<AttachmentDetail[]> {
     if (!attachments) return [];
 
     try {
       const urlPromises = attachments.map(async (attachment) => {
         return new Promise<AttachmentDetail>((resolve, reject) => {
-          this.documentService.downloadAttachment$(attachment, "outgoing-document")
+          this.documentService
+            .downloadAttachment$(attachment, 'outgoing-document')
             .subscribe({
               next: (blob: any) => {
                 const url = window.URL.createObjectURL(blob);
-                resolve({fileName: attachment, fileUrl: url});
+                resolve({ fileName: attachment, fileUrl: url });
               },
               error: (err: any) => {
                 console.error('Error downloading attachment:', err);
-                resolve({fileName: attachment, fileUrl: ''});
-              }
+                resolve({ fileName: attachment, fileUrl: '' });
+              },
             });
         });
       });
-      
+
       return await Promise.all(urlPromises);
     } catch (error) {
       console.error('Error retrieving attachment URLs:', error);
@@ -221,10 +226,8 @@ export class OutgoingDocumentComponent implements OnInit {
   }
 
   returnDocument(document: any) {
-    this.router.navigateByUrl('add-outgoing-document', {
-      state: { data: document },
-    });
-    
+    this.router.navigate(['add-outgoing-document', document.documentNumber]);
+
     // Highlight document when returning to viewing page
     if (document.status !== 'waiting') {
       this.recentlyFinishedDoc.set(document.id);
@@ -423,7 +426,8 @@ export class OutgoingDocumentComponent implements OnInit {
   }
 
   // Method to recover a document
-  recoverDocument(document: any) {    // Update status on the server
+  recoverDocument(document: any) {
+    // Update status on the server
     this.documentService
       .updateDocumentStatus(document.documentNumber, 'waiting', false)
       .subscribe({
@@ -567,13 +571,13 @@ export class OutgoingDocumentComponent implements OnInit {
   getShortFileName(filename: string): string {
     // Split filename by hyphen to get the part without timestamp
     const parts = filename.split('-');
-    
+
     // If there is a timestamp at the beginning (standard format), remove it
     if (parts.length > 1 && !isNaN(Number(parts[0]))) {
       // Remove the first part (timestamp) and join the remaining parts
       return parts.slice(1).join('-');
     }
-    
+
     // If not in the right format or no timestamp, return the original name
     return filename;
   }
@@ -595,19 +599,19 @@ export class OutgoingDocumentComponent implements OnInit {
   // Public method to navigate to a specific document
   goToDocument(documentId: string) {
     if (!documentId) return;
-    
+
     // Wait for documents to load
     setTimeout(() => {
       const allDocs = this.allDocuments();
       if (!allDocs.length) return;
-      
-      const doc = allDocs.find(d => d.id === documentId);
+
+      const doc = allDocs.find((d) => d.id === documentId);
       if (!doc) return;
-      
+
       // Set the highlighted document based on its status
       if (doc.status === 'waiting') {
         this.recentlyRecoveredDoc.set(documentId);
-        
+
         // Calculate the page for waiting documents
         const waitingDocs = allDocs.filter((d) => d.status === 'waiting');
         const sortedWaitingDocs = waitingDocs.sort((a, b) => {
@@ -634,7 +638,7 @@ export class OutgoingDocumentComponent implements OnInit {
         }
       } else {
         this.recentlyFinishedDoc.set(documentId);
-        
+
         // Calculate the page for finished documents
         const finishedDocs = allDocs.filter((d) => d.status !== 'waiting');
         const sortedFinishedDocs = finishedDocs.sort((a, b) => {

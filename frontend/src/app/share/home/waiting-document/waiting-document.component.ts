@@ -38,9 +38,7 @@ export class WaitingDocumentComponent {
   MOVE_CV = MOVE_CV;
   chuyen = viewChild('chuyen');
   returnDocument(element: any) {
-    this.router.navigateByUrl('add-document', {
-      state: { ...element },
-    });
+    this.router.navigate(['modify-document', element]);
   }
 
   onChange(event: string) {

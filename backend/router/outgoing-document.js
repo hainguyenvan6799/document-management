@@ -23,7 +23,8 @@ const { configureStorage } = require('../utils/fileUpload');
 const { downloadAttachment } = require('../utils/fileDownload');
 const { applyFilters } = require('../utils/documentFilters');
 const { getPaginatedDocuments } = require('../utils/paginateDocuments');
-
+const path = require('path');
+const fs = require('fs');
 const router = express.Router();
 
 // Configure file upload with multer
@@ -100,6 +101,16 @@ router.post(
     res.status(201).json({ message: 'Document created successfully', document: newDocument });
   }
 );
+router.get('/:documentNumber', (req, res) => {
+  const { documentNumber } = req.params;
+  const documents = loadOutgoingDocuments();
+  const document = documents.find(doc => doc.documentNumber === documentNumber);
+  if (!document) {
+    return res.status(404).json({ message: 'Document not found' });
+  }
+
+  res.status(200).json({ message: 'Get documents successfully', document });
+});
 
 // Update Document Status API
 router.patch(
@@ -178,7 +189,12 @@ router.patch(
     documents[documentIndex] = {
       ...documents[documentIndex],
       ...req.body,
-      attachments: req.files ? req.files.map(file => file.filename) : documents[documentIndex].attachments,
+      attachments: req.files
+        ? [
+          ...documents[documentIndex].attachments,
+          ...req.files.map(file => file.filename),
+        ]
+        : documents[documentIndex].attachments
     };
 
     saveDocuments(documents, false);
@@ -224,5 +240,26 @@ router.get('/search', (req, res) => {
     }
   });
 });
+router.delete('/:documentNumber/:filename', (req, res) => {
+  const { documentNumber, filename } = req.params;
+  const filePath = path.join(__dirname, '../upload/incoming-documents', filename);
+
+  const documents = loadOutgoingDocuments();
+  const documentIndex = documents.findIndex(doc => doc.documentNumber === documentNumber);
+
+  if (documentIndex === -1) {
+    return res.status(404).json({ message: 'Document not found' });
+  }
+
+  fs.unlink(filePath, (err) => {
+    // if (err) {
+    //   return res.status(500).json({ message: 'Error deleting file', error: err });
+    // }
+    documents[documentIndex].attachments = documents[documentIndex].attachments.filter((doc) => doc !== filename);
+    saveDocuments(documents, false);
+
+    res.status(200).json({ message: 'Document and file deleted successfully!', attachments: documents[documentIndex].attachments });
+  })
+})
 
 module.exports = router;

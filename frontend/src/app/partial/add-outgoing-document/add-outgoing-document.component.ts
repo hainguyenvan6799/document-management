@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   inject,
   Signal,
   signal,
@@ -7,7 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { MatLabel } from '@angular/material/form-field';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { L10nTranslateAsyncPipe } from 'angular-l10n';
 import _ from 'lodash';
 import { MessageService } from 'primeng/api';
@@ -45,6 +46,7 @@ export class AddOutgoingDocumentComponent {
   protected httpCientService: HttpClientService = inject(HttpClientService);
   protected router: Router = inject(Router);
   protected documentService = inject(DocumentService);
+  protected route: ActivatedRoute = inject(ActivatedRoute);
   emptyBody = {
     issuedDate: '',
     referenceNumber: '',
@@ -72,8 +74,6 @@ export class AddOutgoingDocumentComponent {
     internalRecipient?: string;
   }> = signal(this.emptyBody);
   error: WritableSignal<any> = signal({});
-  documentTitle: WritableSignal<string> = signal('Tạo');
-  isEditDocument = signal(false);
   dropdown: Signal<{
     documentType: Dropdown;
     priority: Dropdown;
@@ -109,13 +109,17 @@ export class AddOutgoingDocumentComponent {
   });
   upload: Signal<FileUpload> = viewChild.required('fu');
   files: WritableSignal<File[]> = signal([]);
-  constructor() {
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state;
-    if (!state) return;
-    this.isEditDocument.set(!state['data']['action']);
-    this.documentTitle.set('Sửa');
-    this.body.set(state['data']);
+  id = computed(() => this.route.snapshot.paramMap.get('id'));
+  isEditDocument = computed(() => this.id());
+  documentTitle: Signal<string> = computed(() =>
+    this.isEditDocument() ? 'Sửa' : 'Tạo'
+  );
+  ngOnInit() {
+    this.getDocument()?.subscribe({
+      next: (data: any) => {
+        this.body.set(data.document);
+      },
+    });
   }
 
   onChange(key: string, value: string) {
@@ -138,26 +142,25 @@ export class AddOutgoingDocumentComponent {
     this.router.navigate(['']);
   }
   patchDocument$() {
-    const body: FormData = new FormData();
-    /* -------------------IMPROVE LATER BECAUSE WE WILL CREATE SEPERATE DB TO STORE UPLOAD DOCUMENT ---------------------------
+    const body = new FormData();
+    for (const file of this.files()) {
+      if (!file) return;
+      body.append('attachments', file);
+    }
 
-    body.append(
-      'attachments',
-      (this.files() as FileUpload)._files[0],
-      (this.files() as FileUpload)._files[0].name
-    );
-
-*/
+    const jsonBody: any = _.cloneDeep(this.body());
+    for (const key in jsonBody) {
+      if (jsonBody.hasOwnProperty(key)) {
+        body.append(key, jsonBody[key]);
+      }
+    }
+    body.set('status', 'finished');
     return this.httpCientService
       .commonPatch({
         url: `${environment.RESOURCE_URL}/outgoing-documents/${
           this.body().documentNumber
         }`,
-        body: {
-          ..._.cloneDeep(this.body()),
-          status: 'finished',
-          attachmentDetails: [],
-        },
+        body,
       })
       .subscribe({
         next: (data: any) => {
@@ -222,5 +225,12 @@ export class AddOutgoingDocumentComponent {
           this.error.set(error.errors);
         },
       });
+  }
+  getDocument() {
+    if (!this.id()) return;
+    return this.documentService.getDocument$({
+      documentNumber: this.id() as string,
+      isIncoming: false,
+    });
   }
 }

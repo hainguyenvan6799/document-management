@@ -25,8 +25,14 @@ export class DocumentService {
     });
   }
 
-  downloadAttachment$(filename: string, documentType: "incoming-document" | "outgoing-document") {
-    const routeName = documentType === "incoming-document" ? "incoming-documents" : "outgoing-documents";
+  downloadAttachment$(
+    filename: string,
+    documentType: 'incoming-document' | 'outgoing-document'
+  ) {
+    const routeName =
+      documentType === 'incoming-document'
+        ? 'incoming-documents'
+        : 'outgoing-documents';
     return this.httpClientService.comonGet({
       url: `${environment.RESOURCE_URL}/${routeName}/attachments/${filename}`,
       responseType: 'blob',
@@ -87,6 +93,28 @@ export class DocumentService {
       headers: {},
       params: {},
       body: updateData,
+    });
+  }
+  deleteFile$(props: {
+    documentNumber: string;
+    filename: string;
+    isIncoming?: boolean;
+  }) {
+    const { documentNumber, filename, isIncoming = true } = props;
+    const documentType = isIncoming
+      ? 'incoming-documents'
+      : 'outgoing-documents';
+    return this.httpClientService.commonDelete({
+      url: `${environment.RESOURCE_URL}/${documentType}/${documentNumber}/${filename}`,
+    });
+  }
+  getDocument$(props: { documentNumber: string; isIncoming?: boolean }) {
+    const { documentNumber, isIncoming = true } = props;
+    const documentType = isIncoming
+      ? 'incoming-documents'
+      : 'outgoing-documents';
+    return this.httpClientService.comonGet({
+      url: `${environment.RESOURCE_URL}/${documentType}/${documentNumber}`,
     });
   }
 }

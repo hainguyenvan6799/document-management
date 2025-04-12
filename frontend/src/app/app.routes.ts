@@ -12,6 +12,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'modify-document/:id',
+    loadComponent: () =>
+      import('./partial/add-document/add-document.component').then(
+        (com) => com.AddDocumentComponent
+      ),
+  },
+  {
     path: 'search-document',
     loadComponent: () =>
       import('./partial/search-document/search-document.component').then(
@@ -20,6 +27,13 @@ export const routes: Routes = [
   },
   {
     path: 'add-outgoing-document',
+    loadComponent: () =>
+      import(
+        './partial/add-outgoing-document/add-outgoing-document.component'
+      ).then((com) => com.AddOutgoingDocumentComponent),
+  },
+  {
+    path: 'add-outgoing-document/:id',
     loadComponent: () =>
       import(
         './partial/add-outgoing-document/add-outgoing-document.component'

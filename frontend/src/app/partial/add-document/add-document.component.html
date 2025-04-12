@@ -104,7 +104,6 @@
       </div>
       }
     </div>
-    @if(!isEditDocument()) {
     <div class="col-6 d-flex file-upload">
       <p-fileupload
         #fu
@@ -120,14 +119,15 @@
         (onClear)="onRemove()"
       />
     </div>
-
-    } @else {
+    @if(isEditDocument()) {
     <hr />
     <app-list-uploaded
       [listData]="body().attachments"
       [columns]="['Stt', 'Tên File']"
       documentType="incoming-document"
+      [body]="this.body()"
     />
+
     }
     <div class="button d-flex justify-content-end p-2">
       <cc-button

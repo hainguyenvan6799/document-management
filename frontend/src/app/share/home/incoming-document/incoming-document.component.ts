@@ -13,10 +13,10 @@ import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { L10nTranslateAsyncPipe } from 'angular-l10n';
 import { MessageService } from 'primeng/api';
+import { AttachmentDetail } from '../../../commons/constants';
 import { DocumentService } from '../../../services/document.service';
 import { MOVE_CV } from '../../constant';
 import { RecipientLabelPipe } from '../../pipes/recipient-label.pipe';
-import { AttachmentDetail } from '../../../commons/constants';
 
 @Component({
   selector: 'app-incoming-document',
@@ -146,7 +146,9 @@ export class IncomingDocumentComponent implements OnInit {
         if (response && response.data) {
           const { documents } = response.data;
 
-          const enhancedDocuments = await Promise.all(documents.map((doc: any) => this.mappingDataForDisplaying(doc)));
+          const enhancedDocuments = await Promise.all(
+            documents.map((doc: any) => this.mappingDataForDisplaying(doc))
+          );
 
           // Store all documents
           this.allDocuments.set(enhancedDocuments);
@@ -179,29 +181,32 @@ export class IncomingDocumentComponent implements OnInit {
     return {
       ...document,
       attachmentDetails: attachmentData,
-    }
+    };
   }
 
-  private async getAttachmentUrls(attachments: string[] | undefined): Promise<AttachmentDetail[]> {
+  private async getAttachmentUrls(
+    attachments: string[] | undefined
+  ): Promise<AttachmentDetail[]> {
     if (!attachments) return [];
 
     try {
       const urlPromises = attachments.map(async (attachment) => {
         return new Promise<AttachmentDetail>((resolve, reject) => {
-          this.documentService.downloadAttachment$(attachment, "incoming-document")
+          this.documentService
+            .downloadAttachment$(attachment, 'incoming-document')
             .subscribe({
               next: (blob: any) => {
                 const url = window.URL.createObjectURL(blob);
-                resolve({fileName: attachment, fileUrl: url});
+                resolve({ fileName: attachment, fileUrl: url });
               },
               error: (err: any) => {
                 console.error('Error downloading attachment:', err);
-                resolve({fileName: attachment, fileUrl: ''});
-              }
+                resolve({ fileName: attachment, fileUrl: '' });
+              },
             });
         });
       });
-      
+
       return await Promise.all(urlPromises);
     } catch (error) {
       console.error('Error retrieving attachment URLs:', error);
@@ -220,8 +225,7 @@ export class IncomingDocumentComponent implements OnInit {
   }
 
   returnDocument(document: any) {
-    localStorage.setItem('action', 'Sửa');
-    this.router.navigateByUrl('add-document', { state: { data: document } });
+    this.router.navigate(['modify-document', document.documentNumber]);
 
     // Highlight và scroll đến document
     this.recentlyFinishedDoc.set(document.id);
@@ -328,7 +332,11 @@ export class IncomingDocumentComponent implements OnInit {
 
     if (docIndex !== -1) {
       // Change status from "waiting" to "finished"
-      const updatedDoc = { ...allDocs[docIndex], status: 'finished', internalRecipient };
+      const updatedDoc = {
+        ...allDocs[docIndex],
+        status: 'finished',
+        internalRecipient,
+      };
 
       // Update allDocuments array with modified document
       const newAllDocs = [...allDocs];
@@ -377,13 +385,13 @@ export class IncomingDocumentComponent implements OnInit {
   getShortFileName(filename: string): string {
     // Split filename by hyphen to get the part without timestamp
     const parts = filename.split('-');
-    
+
     // If there is a timestamp at the beginning (standard format), remove it
     if (parts.length > 1 && !isNaN(Number(parts[0]))) {
       // Remove the first part (timestamp) and join the remaining parts
       return parts.slice(1).join('-');
     }
-    
+
     // If not in the right format or no timestamp, return the original name
     return filename;
   }
@@ -405,18 +413,18 @@ export class IncomingDocumentComponent implements OnInit {
   // Public method to navigate to a specific document
   goToDocument(documentId: string) {
     if (!documentId) return;
-    
+
     // First set the highlighted document
     this.recentlyFinishedDoc.set(documentId);
-    
+
     // Wait for documents to load
     setTimeout(() => {
       const allDocs = this.allDocuments();
       if (!allDocs.length) return;
-      
-      const doc = allDocs.find(d => d.id === documentId);
+
+      const doc = allDocs.find((d) => d.id === documentId);
       if (!doc) return;
-      
+
       // Calculate the page
       const finishedDocs = allDocs.filter((d) => d.status !== 'waiting');
       const sortedFinishedDocs = finishedDocs.sort((a, b) => {
