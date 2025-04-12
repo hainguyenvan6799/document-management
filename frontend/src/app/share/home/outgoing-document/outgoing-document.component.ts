@@ -200,10 +200,9 @@ export class OutgoingDocumentComponent implements OnInit {
                 const url = window.URL.createObjectURL(blob);
                 resolve({ fileName: attachment, fileUrl: url });
               },
-              error: (err: any) => {
-                console.error('Error downloading attachment:', err);
-                resolve({ fileName: attachment, fileUrl: '' });
-              },
+              error: () => {
+                resolve({fileName: attachment, fileUrl: ''});
+              }
             });
         });
       });

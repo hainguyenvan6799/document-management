@@ -18,7 +18,11 @@
       ],
       "processingOpinion": "Cần xem xét gấp",
       "status": "finished",
-      "internalRecipient": "staff"
+      "internalRecipients": [
+        "staff",
+        "management-staff",
+        "teacher"
+      ]
     },
     {
       "id": "b2c3d4e5-2234-5678-9101-bcdef1234567",
@@ -37,7 +41,9 @@
       ],
       "processingOpinion": "Chuyển phòng pháp chế xem xét",
       "status": "finished",
-      "internalRecipient": "management-staff"
+      "internalRecipients": [
+        "management-staff"
+      ]
     },
     {
       "id": "c3d4e5f6-3234-5678-9101-cdef12345678",
@@ -56,7 +62,9 @@
       ],
       "processingOpinion": "Kiểm tra số liệu chính xác",
       "status": "finished",
-      "internalRecipient": "teacher"
+      "internalRecipients": [
+        "teacher"
+      ]
     },
     {
       "id": "d5e6f7g8-4234-5678-9101-defg12345679",
@@ -75,7 +83,9 @@
       ],
       "processingOpinion": "Đang chờ phân bổ ngân sách",
       "status": "finished",
-      "internalRecipient": "staff"
+      "internalRecipients": [
+        "staff"
+      ]
     },
     {
       "id": "e6f7g8h9-5234-5678-9101-efgh12345670",
@@ -94,7 +104,9 @@
       ],
       "processingOpinion": "Cần phòng nhân sự xem xét",
       "status": "finished",
-      "internalRecipient": "teacher"
+      "internalRecipients": [
+        "teacher"
+      ]
     },
     {
       "id": "f7g8h9i0-6234-5678-9101-fghi12345671",
@@ -112,8 +124,11 @@
         "chinh_sach_an_ninh_2024.pdf"
       ],
       "processingOpinion": "Cần phòng CNTT phê duyệt",
-      "status": "waiting",
-      "internalRecipient": "teacher"
+      "status": "finished",
+      "internalRecipients": [
+        "staff",
+        "management-staff"
+      ]
     },
     {
       "id": "g8h9i0j1-7234-5678-9101-ghij12345672",
@@ -131,8 +146,11 @@
         "bao_cao_tai_chinh_q2.pdf"
       ],
       "processingOpinion": "Xem xét và phê duyệt",
-      "status": "waiting",
-      "internalRecipient": "management-staff"
+      "status": "finished",
+      "internalRecipients": [
+        "staff",
+        "management-staff"
+      ]
     },
     {
       "id": "h9i0j1k2-8234-5678-9101-hijk12345673",
@@ -151,7 +169,9 @@
       ],
       "processingOpinion": "Cần ý kiến từ tổ chuyên môn",
       "status": "finished",
-      "internalRecipient": "teacher"
+      "internalRecipients": [
+        "teacher"
+      ]
     },
     {
       "id": "i0j1k2l3-9234-5678-9101-ijkl12345674",
@@ -170,7 +190,9 @@
       ],
       "processingOpinion": "Cần ban giám hiệu phê duyệt",
       "status": "finished",
-      "internalRecipient": "staff"
+      "internalRecipients": [
+        "staff"
+      ]
     },
     {
       "id": "j1k2l3m4-0234-5678-9101-jklm12345675",
@@ -188,8 +210,12 @@
         "de_xuat_nang_cap.pdf"
       ],
       "processingOpinion": "Đang chờ phê duyệt ngân sách",
-      "status": "waiting",
-      "internalRecipient": "management-staff"
+      "status": "finished",
+      "internalRecipients": [
+        "staff",
+        "management-staff",
+        "teacher"
+      ]
     },
     {
       "id": "66e1531d-855e-4111-adcd-9f4689e7fb30",
@@ -208,7 +234,7 @@
       ],
       "processingOpinion": "Không có",
       "status": "waiting",
-      "internalRecipient": ""
+      "internalRecipients": []
     }
   ],
   "outgoingDocuments": [

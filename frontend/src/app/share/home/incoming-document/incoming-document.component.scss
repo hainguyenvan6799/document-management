@@ -82,6 +82,12 @@ table thead tr {
     color: #666;
     margin-top: 2px;
   }
+
+  .disabled-link {
+    pointer-events: none;
+    text-decoration: none;
+    color: #6c757d;
+  }
 }
 
 @keyframes pulseBackground {

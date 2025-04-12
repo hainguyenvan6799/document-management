@@ -95,7 +95,7 @@ router.post(
       attachments: req.files ? req.files.map(file => file.filename) : [],
       processingOpinion: req.body.processingOpinion,
       status: DOCUMENT_STATUS.WAITING,
-      internalRecipient: "",
+      internalRecipients: [],
     };
 
     documents.push(newDocument);
@@ -187,10 +187,24 @@ router.patch(
       .optional()
       .isIn(STATUSES)
       .withMessage({ code: ERROR_CODES.INVALID_STATUS, message: 'Invalid status' }),
-    body('internalRecipient')
+    body('internalRecipients')
       .optional()
-      .notEmpty()
-      .withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Internal recipient cannot be empty if provided' }),
+      .default([])
+      .isArray()
+      .withMessage({ code: ERROR_CODES.INVALID_RECIPIENTS, message: 'Internal recipients must be an array' })
+      .custom((value) => {
+        const validValues = ['staff', 'management-staff', 'teacher'];
+        // Kiểm tra xem tất cả các giá trị trong mảng có hợp lệ không
+        const allValid = value.every(recipient => validValues.includes(recipient));
+        if (!allValid) {
+          throw new Error('Invalid recipient values');
+        }
+        return true;
+      })
+      .withMessage({ 
+        code: ERROR_CODES.INVALID_RECIPIENT_VALUES, 
+        message: 'Internal recipients must only contain: staff, management-staff, teacher' 
+      }),
   ],
   handleValidationErrors,
   (req, res) => {
