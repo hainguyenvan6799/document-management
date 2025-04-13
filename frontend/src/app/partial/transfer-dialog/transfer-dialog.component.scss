@@ -1,0 +1,14 @@
+.transfer-dialog-container {
+    padding: 16px;
+  }
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    gap: 8px;
+  }
+
+  a.delete-file {
+    position: relative;
+    top: 6px;
+}

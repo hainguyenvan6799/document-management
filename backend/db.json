@@ -230,7 +230,8 @@
       "type": "report",
       "receivingMethod": "email",
       "attachments": [
-        "1743922754655-de_xuat_kinh_phi_2024.txt"
+        "1743922754655-de_xuat_kinh_phi_2024.txt",
+        "test-fake-file.txt"
       ],
       "processingOpinion": "Không có",
       "status": "waiting",

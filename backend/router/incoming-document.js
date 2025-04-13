@@ -26,6 +26,7 @@ const { applyFilters } = require('../utils/documentFilters');
 const { getPaginatedDocuments } = require('../utils/paginateDocuments');
 const path = require('path');
 const fs = require('fs');
+const { deleteFiles } = require('../utils/fileDelete');
 const router = express.Router();
 
 // Configure file upload with multer
@@ -189,22 +190,6 @@ router.patch(
       .withMessage({ code: ERROR_CODES.INVALID_STATUS, message: 'Invalid status' }),
     body('internalRecipients')
       .optional()
-      .default([])
-      .isArray()
-      .withMessage({ code: ERROR_CODES.INVALID_RECIPIENTS, message: 'Internal recipients must be an array' })
-      .custom((value) => {
-        const validValues = ['staff', 'management-staff', 'teacher'];
-        // Kiểm tra xem tất cả các giá trị trong mảng có hợp lệ không
-        const allValid = value.every(recipient => validValues.includes(recipient));
-        if (!allValid) {
-          throw new Error('Invalid recipient values');
-        }
-        return true;
-      })
-      .withMessage({ 
-        code: ERROR_CODES.INVALID_RECIPIENT_VALUES, 
-        message: 'Internal recipients must only contain: staff, management-staff, teacher' 
-      }),
   ],
   handleValidationErrors,
   (req, res) => {
@@ -216,20 +201,31 @@ router.patch(
       return res.status(404).json({ message: 'Document not found' });
     }
 
+    if (req.body.filesToDelete !== "") {
+      const filesToDelete = req.body.filesToDelete.split(',');
+      deleteFiles(filesToDelete);
+      documents[documentIndex].attachments = documents[documentIndex].attachments.filter(attachment => !filesToDelete.includes(attachment));
+    }
+
+    delete(req.body.filesToDelete);
+
+    const oldAttachments = documents[documentIndex].attachments;
+    console.log(req.body);
+
     documents[documentIndex] = {
       ...documents[documentIndex],
       ...req.body,
-      attachments: req.files
-        ? [
-          ...documents[documentIndex].attachments,
-          ...req.files.map(file => file.filename),
-        ]
-        : documents[documentIndex].attachments
+      attachments: req.files ? [...oldAttachments, ...req.files.map(file => file.filename)] : oldAttachments,
+      internalRecipients: req.body.internalRecipients ? req.body.internalRecipients.split(',') : [],
     };
     saveDocuments(documents, true);
     res.status(200).json({ message: 'Document updated successfully', document: documents[documentIndex] });
   }
 );
+
+function getAttachments() {
+  
+}
 
 // Download Attachment API
 router.get('/attachments/:filename', (req, res) => {

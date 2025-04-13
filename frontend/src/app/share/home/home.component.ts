@@ -19,7 +19,6 @@ import {
   CcDialogComponent,
   TEMPLATE_TYPE,
 } from '../../commons/cc-dialog/cc-dialog.component';
-import { CcRadioGroupComponent } from '../../commons/cc-radio-group/cc-radio-group.component';
 import { CcToggleGroupComponent } from '../../commons/cc-toggle-group/cc-toggle-group.component';
 import { DocumentService } from '../../services/document.service';
 import { HttpClientService } from '../../services/http-client.service';
@@ -34,13 +33,11 @@ import { OutgoingDocumentComponent } from './outgoing-document/outgoing-document
     CommonModule,
     L10nTranslateAsyncPipe,
     MatTableModule,
-    CcButtonComponent,
     MatPaginatorModule,
     CcToggleGroupComponent,
-    // CcLoadingComponent,
-    CcRadioGroupComponent,
     IncomingDocumentComponent,
     OutgoingDocumentComponent,
+    CcButtonComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

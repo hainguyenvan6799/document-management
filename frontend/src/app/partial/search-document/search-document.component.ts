@@ -26,6 +26,7 @@ import { CcSelectComponent } from '../../commons/cc-select/cc-select.component';
 import {DocumentService} from '../../services/document.service';
 import { ExportService } from '../../services/export.service';
 import { AttachmentDetail, SearchParams, SearchResultDocument } from '../../commons/constants';
+import { getShortFileName } from '../../utils';
 
 interface PaginatedDocument extends SearchResultDocument {
   attachmentDetails: Array<AttachmentDetail>;
@@ -192,6 +193,10 @@ export class SearchDocumentComponent implements OnInit, AfterViewInit {
 
   private resetPageIndex() {
     this.pageIndex.set(0);
+  }
+
+  getShortFileName(filename: string): string {
+    return getShortFileName(filename);
   }
 
   onChangeSearch() {
@@ -491,30 +496,12 @@ export class SearchDocumentComponent implements OnInit, AfterViewInit {
 
     const a = document.createElement('a');
     a.href = fileUrl;
-    a.download = this.getShortFileName(fileName);
+    a.download = getShortFileName(fileName);
     a.click();
 
     // Cleanup
     window.URL.revokeObjectURL(fileUrl);
     window.document.body.removeChild(a);
-  }
-
-  /**
-   * Convert filename from format "1742310337699-github-recovery-codes.txt"
-   * to shorter form by removing the timestamp at the beginning
-   */
-  getShortFileName(filename: string): string {
-    // Split filename by hyphen to get the part without timestamp
-    const parts = filename.split('-');
-    
-    // If there is a timestamp at the beginning (standard format), remove it
-    if (parts.length > 1 && !isNaN(Number(parts[0]))) {
-      // Remove the first part (timestamp) and join the remaining parts
-      return parts.slice(1).join('-');
-    }
-    
-    // If not in the right format or no timestamp, return the original name
-    return filename;
   }
 
   /**

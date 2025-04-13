@@ -1,0 +1,15 @@
+<div class="transfer-dialog-container">
+  <cc-mat-select
+    [options]="data.recipientOptions"
+    [multiple]="true"
+    [label]="'Chọn nơi nhận'"
+    [placeholder]="'Chọn...'"
+    [appearance]="'outline'"
+    (selectionChange)="onSelectionChange($event)"
+  ></cc-mat-select>
+  <div class="dialog-actions">
+    <cc-button mode="secondary" title="Hủy" (onClick)="cancel()"></cc-button>
+    <cc-button title="Xác nhận" (onClick)="confirm()"></cc-button>
+  </div>
+</div>
+<p-toast></p-toast>

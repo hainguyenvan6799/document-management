@@ -127,6 +127,7 @@ router.patch(
     if (!document) {
       return res.status(404).json({ message: 'Document not found' });
     }
+    
 
     document.status = status;
     saveDocuments(documents, false);

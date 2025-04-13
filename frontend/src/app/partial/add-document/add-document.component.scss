@@ -20,6 +20,11 @@
     .file-upload {
         margin-top: 1rem;
     }
+
+    a.delete-file {
+        position: relative;
+        top: 6px;
+    }
 }
 
 ::ng-deep {

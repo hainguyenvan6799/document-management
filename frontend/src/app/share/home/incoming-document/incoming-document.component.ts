@@ -20,8 +20,8 @@ import { RecipientLabelPipe } from '../../pipes/recipient-label.pipe';
 import { ToastModule } from 'primeng/toast';
 import { AttachmentDetail } from '../../../commons/constants';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CcMatSelectComponent } from '../../../commons/cc-mat-select/cc-mat-select.component';
-import { CcButtonComponent } from '../../../commons/cc-button/cc-button.component';
+import { getShortFileName } from '../../../utils';
+import { TransferDialogComponent } from '../../../partial/transfer-dialog/transfer-dialog.component';
 
 type TransferDialogResult = {
   selectedRecipients: Array<"staff" | "staff-management" | "teacher">;
@@ -36,7 +36,6 @@ type TransferDialogResult = {
     MatPaginatorModule,
     L10nTranslateAsyncPipe,
     RecipientLabelPipe,
-    CcButtonComponent,
     ToastModule,
   ],
   providers: [MessageService],
@@ -404,16 +403,7 @@ export class IncomingDocumentComponent implements OnInit {
 
   getShortFileName(filename: string): string {
     // Split filename by hyphen to get the part without timestamp
-    const parts = filename.split('-');
-
-    // If there is a timestamp at the beginning (standard format), remove it
-    if (parts.length > 1 && !isNaN(Number(parts[0]))) {
-      // Remove the first part (timestamp) and join the remaining parts
-      return parts.slice(1).join('-');
-    }
-
-    // If not in the right format or no timestamp, return the original name
-    return filename;
+    return getShortFileName(filename);
   }
 
   downloadAttachment(fileUrl: string, fileName: string) {
@@ -522,67 +512,3 @@ export class IncomingDocumentComponent implements OnInit {
   }
 }
 
-// Dialog component for transfer
-@Component({
-  selector: 'app-transfer-dialog',
-  standalone: true,
-  imports: [CommonModule, CcMatSelectComponent, CcButtonComponent, ToastModule],
-  providers: [MessageService],
-  template: `
-    <div class="transfer-dialog-container">
-      <cc-mat-select
-        [options]="data.recipientOptions"
-        [multiple]="true"
-        [label]="'Chọn nơi nhận'"
-        [placeholder]="'Chọn...'"
-        [appearance]="'outline'"
-        (selectionChange)="onSelectionChange($event)"
-      ></cc-mat-select>
-      <div class="dialog-actions">
-        <cc-button mode="secondary" title="Hủy" (onClick)="cancel()"></cc-button>
-        <cc-button title="Xác nhận" (onClick)="confirm()"></cc-button>
-      </div>
-    </div>
-    <p-toast></p-toast>
-  `,
-  styles: [`
-    .transfer-dialog-container {
-      padding: 16px;
-    }
-    .dialog-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 16px;
-      gap: 8px;
-    }
-  `]
-})
-export class TransferDialogComponent {
-  selectedRecipients: string[] = [];
-  
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<TransferDialogComponent>,
-    private messageService: MessageService
-  ) {}
-  
-  onSelectionChange(event: any) {
-    this.selectedRecipients = event.value;
-  }
-  
-  cancel() {
-    this.dialogRef.close();
-  }
-  
-  confirm() {
-    if (this.selectedRecipients.length === 0) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Lỗi',
-        detail: 'Vui lòng chọn người nhận',
-      });
-      return;
-    }
-    this.dialogRef.close({ selectedRecipients: this.selectedRecipients });
-  }
-}

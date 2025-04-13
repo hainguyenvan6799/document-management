@@ -52,6 +52,6 @@ export class CcMatSelectComponent {
   control = new FormControl();
 
   onSelectionChange(event: any) {
-    this.selectionChange.emit(event);
+    this.selectionChange.emit(event.value);
   }
 }

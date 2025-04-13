@@ -13,12 +13,18 @@ const configureStorage = (uploadDir = 'upload') => {
       cb(null, uploadPath);
     },
     filename: (_, file, cb) => {
-      console.log('Processing file upload:', file.originalname);
       cb(null, `${Date.now()}-${file.originalname}`);
     },
   });
 
-  return multer({ storage });
+  const fileFilter = (_, file, cb) => {
+    // Check if the file name is exist in the upload directory
+    const regex = /(\d+)-(.*)/;
+    const matchedContent = file.originalname.match(regex);
+    cb(null, matchedContent ? false : true);
+  }
+
+  return multer({ storage, fileFilter });
 };
 
 module.exports = {

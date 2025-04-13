@@ -91,24 +91,21 @@
         maxFileSize="1000000"
         (onSelect)="onUpload($event)"
         (onClear)="onRemove()"
-      />
-    </div>
-    @if(isEditDocument()) {
-    <hr />
-    <app-list-uploaded
-      [listData]="body().attachments"
-      [columns]="['Stt', 'Tên File']"
-      documentType="outgoing-document"
-      [body]="this.body()"
-    />
-    }
-    <div class="button d-flex justify-content-end p-2">
-      <cc-button
-        mode="secondary"
-        title="cancel"
-        (onClick)="cancel()"
-      ></cc-button>
-      <cc-button title="save" (onClick)="save$()"></cc-button>
+      >
+      <ng-template let-file pTemplate='file'>
+        
+        <div>{{getShortFileName(file.name)}} <a
+          mat-icon-button
+          class="delete-file"
+          color="warn"
+          (click)="removeFile(file, fu)"
+          title="Xoá"
+        >
+          <mat-icon>delete</mat-icon>
+        </a></div>
+
+    </ng-template>
+    </p-fileupload>
     </div>
   </div>
 </div>

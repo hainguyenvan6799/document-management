@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ListUploadedComponent } from './list-uploaded.component';
+import { TransferDialogComponent } from './transfer-dialog.component';
 
-describe('ListUploadedComponent', () => {
-  let component: ListUploadedComponent;
-  let fixture: ComponentFixture<ListUploadedComponent>;
+describe('TransferDialogComponent', () => {
+  let component: TransferDialogComponent;
+  let fixture: ComponentFixture<TransferDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ListUploadedComponent]
+      imports: [TransferDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ListUploadedComponent);
+    fixture = TestBed.createComponent(TransferDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
