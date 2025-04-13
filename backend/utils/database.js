@@ -29,25 +29,25 @@ const saveDocuments = (documents, isIncoming = true) => {
     const data = fs.readFileSync(DB_FILE);
     currentData = JSON.parse(data);
   }
-  
+
   // Cập nhật dữ liệu mới vào đối tượng hiện tại
   if (isIncoming) {
     currentData.incomingDocuments = documents;
   } else {
     currentData.outgoingDocuments = documents;
   }
-  
+
   // Ghi dữ liệu đã cập nhật vào file
   fs.writeFileSync(DB_FILE, JSON.stringify(currentData, null, 2));
 };
 
 // Get next document number
-const getNextDocumentNumber = () => {
-  const documents = loadIncomingDocuments();
+const getNextDocumentNumber = (isIncoming = true) => {
+  const documents = isIncoming ? loadIncomingDocuments() : loadOutgoingDocuments();
   if (documents.length === 0) {
     return "1"; // Start from 1 if there are no documents
   }
-  
+
   const maxNumber = Math.max(...documents.map(doc => parseInt(doc.documentNumber, 10)));
   return (maxNumber + 1).toString();
 };

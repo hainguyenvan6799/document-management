@@ -8,6 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { MatLabel } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { L10nTranslateAsyncPipe } from 'angular-l10n';
 import _ from 'lodash';
@@ -16,6 +17,7 @@ import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { mergeMap, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { CcButtonComponent } from '../../commons/cc-button/cc-button.component';
 import { CcDatePickerComponent } from '../../commons/cc-date-picker/cc-date-picker.component';
 import { CcDropdownComponent } from '../../commons/cc-dropdown/cc-dropdown.component';
 import { CcInputComponent } from '../../commons/cc-input/cc-input.component';
@@ -23,9 +25,8 @@ import { CcMatSelectComponent } from '../../commons/cc-mat-select/cc-mat-select.
 import { DocumentService } from '../../services/document.service';
 import { HttpClientService } from '../../services/http-client.service';
 import { MESSAGE_CODES, MOVE_CV } from '../../share/constant';
-import { Dropdown } from '../add-document/add-document.component';
-import { MatIconModule } from '@angular/material/icon';
 import { getShortFileName } from '../../utils';
+import { Dropdown } from '../add-document/add-document.component';
 @Component({
   selector: 'app-add-outgoing-document',
   imports: [
@@ -38,6 +39,7 @@ import { getShortFileName } from '../../utils';
     L10nTranslateAsyncPipe,
     CcMatSelectComponent,
     MatIconModule,
+    CcButtonComponent,
   ],
   providers: [MessageService],
   templateUrl: './add-outgoing-document.component.html',
@@ -125,20 +127,26 @@ export class AddOutgoingDocumentComponent {
         this.body.set(data.document);
 
         if (!this.isEditDocument()) return;
-        const files = await Promise.all(data.document.attachments.map((fileName: any) => {
-          return new Promise((resolve, reject) => {
-            this.documentService.downloadAttachment$(fileName, 'outgoing-document').subscribe({
-              next: (response: any) => {
-                const file = new File([response], fileName, { type: response.type });
-                (file as any).displayFileName = getShortFileName(fileName);
-                resolve(file);
-              },
-              error: () => {
-                resolve(null);
-              }
+        const files = await Promise.all(
+          data.document.attachments.map((fileName: any) => {
+            return new Promise((resolve, reject) => {
+              this.documentService
+                .downloadAttachment$(fileName, 'outgoing-document')
+                .subscribe({
+                  next: (response: any) => {
+                    const file = new File([response], fileName, {
+                      type: response.type,
+                    });
+                    (file as any).displayFileName = getShortFileName(fileName);
+                    resolve(file);
+                  },
+                  error: () => {
+                    resolve(null);
+                  },
+                });
             });
-          });
-        }));
+          })
+        );
         const filteredFiles = files.filter((file) => file !== null);
         this.files.set(filteredFiles);
       },
@@ -148,21 +156,35 @@ export class AddOutgoingDocumentComponent {
   onChange(key: string, value: any) {
     this.body.update((prev) => {
       const old = _.cloneDeep(prev);
-      if (key === 'internalRecipients') {
-        _.set(old, [key], [value.value]);
-      } else {
-        _.set(old, [key], value);
-      }
+      _.set(old, [key], value);
       return old;
     });
   }
   save$() {
     if (this.isEditDocument()) {
       return this.patchDocument$()
-        ?.subscribe({
-          next: (data: any) => {
-            if (!data) return;
+        .pipe(
+          mergeMap((data: any) => {
+            console.log({ data }, '1');
+            if (data.message === MESSAGE_CODES.VALIDATION_FAILED) {
+              this.error.set(data.errors);
+              return of(null);
+            }
             this.documentService.currentAdd.set(data.document.id);
+            const docNumber = data.document.documentNumber;
+            if (!docNumber) return of(null);
+            return this.patchFile$(data.document.documentNumber);
+          })
+        )
+        .subscribe({
+          next: (data) => {
+            console.log({ data });
+            if (!data) return;
+            // if (this.filesToDelete().length > 0) {
+            //   this.filesToDelete().forEach((file: string) => {
+            //     this.deleteFiles$(file);
+            //   });
+            // }
             this.body.set(this.emptyBody);
             this.error.set({});
             this.router.navigateByUrl('');
@@ -170,12 +192,29 @@ export class AddOutgoingDocumentComponent {
         });
     }
     return this.saveDocument$()
+      .pipe(
+        mergeMap((data: any) => {
+          if (data.message === MESSAGE_CODES.VALIDATION_FAILED) {
+            this.error.set(data.errors);
+            return of(null);
+          }
+          this.documentService.currentAdd.set(data.document.id);
+          const docNumber = data.document.documentNumber;
+          if (!docNumber) return of(null);
+          return this.patchFile$(data.document.documentNumber);
+        })
+      )
       .subscribe({
         next: (data) => {
           if (!data) return;
           this.body.set(this.emptyBody);
           this.error.set({});
-          this.router.navigateByUrl('');
+          this.files.set([]);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success Message',
+            detail: 'Thêm công văn thành công',
+          });
         },
       });
   }
@@ -184,28 +223,21 @@ export class AddOutgoingDocumentComponent {
   }
   onRemove() {
     this.files.set([]);
+    this.filesToDelete.set([]);
   }
   cancel() {
-    this.router.navigate(['']);
+    this.router.navigate(['../']);
   }
   patchDocument$() {
-    const body = new FormData();
-    for (const file of this.files()) {
-      if (!file) return;
-      body.append('attachments', file);
-    }
-    const jsonBody: any = _.cloneDeep(this.body());
-    for (const key in jsonBody) {
-      if (jsonBody.hasOwnProperty(key)) {
-        body.append(key, jsonBody[key]);
-      }
-    }
-    body.set('status', 'finished');
-    body.set('filesToDelete', this.filesToDelete().length === 0 ? '' : this.filesToDelete().join(', '));
-
     return this.httpCientService.commonPatch({
-      url: `${environment.RESOURCE_URL}/outgoing-documents/${this.body().documentNumber}`,
-      body,
+      url: `${environment.RESOURCE_URL}/outgoing-documents/${
+        this.body().documentNumber
+      }`,
+      body: {
+        ...this.body(),
+        status: 'finished',
+        filesToDelete: this.filesToDelete(),
+      },
     });
   }
   saveDocument$() {
@@ -222,6 +254,25 @@ export class AddOutgoingDocumentComponent {
     });
   }
 
+  patchFile$(documentId: string) {
+    const body = new FormData();
+    if (!this.files().length) return of(this.body().attachments);
+    for (const file of this.files()) {
+      body.append('attachments', file);
+    }
+    return this.httpCientService.commonPatch({
+      url: `${environment.RESOURCE_URL}/outgoing-documents/${documentId}`,
+      body,
+    });
+  }
+  deleteFiles$(filename: string) {
+    return this.documentService
+      .deleteFile$({
+        documentNumber: this.body().documentNumber as string,
+        filename,
+      })
+      .subscribe();
+  }
   getShortFileName(fileName: string) {
     return getShortFileName(fileName);
   }
@@ -230,7 +281,9 @@ export class AddOutgoingDocumentComponent {
     this.filesToDelete.set([...this.filesToDelete(), file.name]);
     const currentIndex = uploader.files.indexOf(file);
     uploader.removeUploadedFile(currentIndex);
-    const newFiles = uploader.files.filter((f, index) => index !== currentIndex);
+    const newFiles = uploader.files.filter(
+      (f, index) => index !== currentIndex
+    );
     this.files.set(newFiles);
   }
 }

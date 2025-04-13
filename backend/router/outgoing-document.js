@@ -25,6 +25,7 @@ const { applyFilters } = require('../utils/documentFilters');
 const { getPaginatedDocuments } = require('../utils/paginateDocuments');
 const path = require('path');
 const fs = require('fs');
+const { MESSAGE_CODES } = require('../constants/errorCodes');
 const router = express.Router();
 
 // Configure file upload with multer
@@ -72,7 +73,7 @@ router.post(
     body('signedBy').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Signer is required' }),
     body('signerPosition').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Signer position is required' }),
     body('summary').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Summary is required' }),
-    body('internalRecipient').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Internal recipient is required' }),
+    body('internalRecipients').notEmpty().withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Internal recipient is required' }),
     body('status').isIn(STATUSES).withMessage({ code: ERROR_CODES.INVALID_STATUS, message: 'Invalid status' }),
   ],
   handleValidationErrors,
@@ -80,9 +81,19 @@ router.post(
 
     const documents = loadOutgoingDocuments();
 
+    if (Array.isArray(req.body.internalRecipients) && req.body.internalRecipients.length === 0) {
+      return res.status(200).json({
+        message: MESSAGE_CODES.VALIDATION_FAILED,
+        errors: {
+          internalRecipients: [{
+            code: 'ERR_REQUIRED_FIELD'
+          }]
+        }
+      });
+    }
     const newDocument = {
       id: uuidv4(),
-      documentNumber: getNextDocumentNumber(),
+      documentNumber: getNextDocumentNumber(false),
       issuedDate: req.body.issuedDate,
       referenceNumber: req.body.referenceNumber,
       priority: req.body.priority,
@@ -90,7 +101,7 @@ router.post(
       signedBy: req.body.signedBy,
       signerPosition: req.body.signerPosition,
       summary: req.body.summary,
-      internalRecipient: req.body.internalRecipient,
+      internalRecipients: req.body.internalRecipients,
       attachments: req.files ? req.files.map(file => file.filename) : [],
       status: DOCUMENT_STATUS.WAITING,
     };
@@ -127,7 +138,6 @@ router.patch(
     if (!document) {
       return res.status(404).json({ message: 'Document not found' });
     }
-    
 
     document.status = status;
     saveDocuments(documents, false);
@@ -168,7 +178,7 @@ router.patch(
       .optional()
       .notEmpty()
       .withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Summary cannot be empty if provided' }),
-    body('internalRecipient')
+    body('internalRecipients')
       .optional()
       .notEmpty()
       .withMessage({ code: ERROR_CODES.REQUIRED_FIELD, message: 'Internal recipient cannot be empty if provided' }),
@@ -179,6 +189,18 @@ router.patch(
   ],
   handleValidationErrors,
   (req, res) => {
+
+    if (Array.isArray(req.body.internalRecipients) && req.body.internalRecipients.length === 0) {
+      return res.status(200).json({
+        message: MESSAGE_CODES.VALIDATION_FAILED,
+        errors: {
+          internalRecipients: [{
+            code: 'ERR_REQUIRED_FIELD'
+          }]
+        }
+      });
+    }
+
     const documents = loadOutgoingDocuments();
     const { documentNumber } = req.params;
     const documentIndex = documents.findIndex(doc => doc.documentNumber === documentNumber);

@@ -75,6 +75,7 @@
           [placeholder]="'Chọn...'"
           [appearance]="'outline'"
           (selectionChange)="onChange('internalRecipients', $event)"
+          [errorMessage]="(this.error()?.['internalRecipients']?.[0]?.code | translateAsync) ?? ''"
         />
       </div>
     </div>
@@ -87,25 +88,34 @@
         [chooseLabel]="('choose' | translateAsync) ?? ''"
         [cancelLabel]="('cancelAll' | translateAsync) ?? ''"
         chooseIcon="pi pi-upload"
-        [name]="this.body().attachments"
         maxFileSize="1000000"
         (onSelect)="onUpload($event)"
         (onClear)="onRemove()"
+        [files]="files()"
       >
-      <ng-template let-file pTemplate='file'>
-        
-        <div>{{getShortFileName(file.name)}} <a
-          mat-icon-button
-          class="delete-file"
-          color="warn"
-          (click)="removeFile(file, fu)"
-          title="Xoá"
-        >
-          <mat-icon>delete</mat-icon>
-        </a></div>
-
-    </ng-template>
-    </p-fileupload>
+        <ng-template let-file pTemplate="file">
+          <div>
+            {{ getShortFileName(file.name) }}
+            <a
+              mat-icon-button
+              class="delete-file"
+              color="warn"
+              (click)="removeFile(file, fu)"
+              title="Xoá"
+            >
+              <mat-icon>delete</mat-icon>
+            </a>
+          </div>
+        </ng-template>
+      </p-fileupload>
+    </div>
+    <div class="button d-flex justify-content-end p-2">
+      <cc-button
+        mode="secondary"
+        title="cancel"
+        (onClick)="cancel()"
+      ></cc-button>
+      <cc-button title="save" (onClick)="save$()"></cc-button>
     </div>
   </div>
 </div>
