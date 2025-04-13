@@ -199,11 +199,11 @@ export class AddDocumentComponent {
         .subscribe({
           next: (data) => {
             if (!data) return;
-            if (this.filesToDelete().length > 0) {
-              this.filesToDelete().forEach((file: string) => {
-                this.deleteFiles$(file);
-              });
-            }
+            // if (this.filesToDelete().length > 0) {
+            //   this.filesToDelete().forEach((file: string) => {
+            //     this.deleteFiles$(file);
+            //   });
+            // }
             this.body.set(this.emptyBody);
             this.error.set({});
             this.router.navigateByUrl('');
@@ -255,6 +255,7 @@ export class AddDocumentComponent {
       body: {
         ...this.body(),
         status: 'finished',
+        filesToDelete: this.filesToDelete()
       },
     });
   }

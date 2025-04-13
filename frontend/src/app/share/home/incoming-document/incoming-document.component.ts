@@ -364,6 +364,7 @@ export class IncomingDocumentComponent implements OnInit {
     // Change status from "waiting" to "finished"
     const updatedDoc = {
       ...allDocs[docIndex],
+      ...document,
       status: 'finished',
       internalRecipientLabels: this.mappingLabelsForInternalRecipient(document),
     };
@@ -515,6 +516,7 @@ export class IncomingDocumentComponent implements OnInit {
         )
         .subscribe({
           next: (response: any) => {
+            console.log(response.document, 899);
             this.updateUIAfterTransfer(response.document);
           },
           error: (error: any) => {
