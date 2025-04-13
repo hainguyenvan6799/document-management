@@ -276,6 +276,7 @@ export class AddDocumentComponent {
     const body = new FormData();
     if (!this.files().length) return of(this.body().attachments);
     for (const file of this.files()) {
+      if (!file || (file as any).isExistent === false) continue;
       body.append('attachments', file);
     }
     return this.httpCientService.commonPatch({

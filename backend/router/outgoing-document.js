@@ -26,6 +26,7 @@ const { getPaginatedDocuments } = require('../utils/paginateDocuments');
 const path = require('path');
 const fs = require('fs');
 const { MESSAGE_CODES } = require('../constants/errorCodes');
+const { deleteFiles } = require('../utils/fileDelete');
 const router = express.Router();
 
 // Configure file upload with multer
@@ -209,17 +210,23 @@ router.patch(
       return res.status(404).json({ message: 'Document not found' });
     }
 
+    const filesToDelete = getFilesToDelete(req.body.filesToDelete);
+    if (filesToDelete.length > 0) {
+      deleteFiles(filesToDelete, false);
+      documents[documentIndex].attachments = documents[documentIndex].attachments.filter(attachment => !filesToDelete.includes(attachment));
+    }
+
+    // make sure document not have "filesToDelete" when saving
+    delete (req.body.filesToDelete);
+
     const oldInternalRecipients = documents[documentIndex].internalRecipients;
+    const oldAttachments = documents[documentIndex].attachments;
+    console.log(oldInternalRecipients);
 
     documents[documentIndex] = {
       ...documents[documentIndex],
       ...req.body,
-      attachments: req.files
-        ? [
-          ...documents[documentIndex].attachments,
-          ...req.files.map(file => file.filename),
-        ]
-        : documents[documentIndex].attachments,
+      attachments: req.files ? [...oldAttachments, ...req.files.map(file => file.filename)] : oldAttachments,
       internalRecipients: mappingInternalRecipients(req.body.internalRecipients, oldInternalRecipients),
     };
 
@@ -228,9 +235,15 @@ router.patch(
   }
 );
 
+function getFilesToDelete(filesToDelete) {
+  if (Array.isArray(filesToDelete)) return filesToDelete;
+  return [];
+}
+
 function mappingInternalRecipients(internalRecipients, oldInternalRecipients) {
-  if (Array.isArray(internalRecipients) === false || internalRecipients.length === 0) return oldInternalRecipients;
-  return [...oldInternalRecipients, ...internalRecipients];
+  if (!internalRecipients) return oldInternalRecipients;
+  if (Array.isArray(internalRecipients)) return internalRecipients;
+  return [];
 }
 
 // Download Attachment API

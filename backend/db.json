@@ -249,10 +249,11 @@
       "signedBy": "Nguyễn Văn Bình",
       "signerPosition": "principal",
       "summary": "Phê duyệt chính sách nhân sự mới",
-      "internalRecipient": [],
+      "internalRecipients": [
+        "management-staff"
+      ],
       "attachments": [
-        "de_xuat_kinh_phi_2024.txt",
-        "de_xuat_kinh_phi_2024.txt"
+        "1744530196454-Bang_tra_no_du_no_giam_dan_36_thang_co_dinh_dang.xlsx"
       ],
       "status": "waiting"
     },
@@ -282,9 +283,15 @@
       "signedBy": "Lê Thị Hương",
       "signerPosition": "Hiệu trưởng",
       "summary": "Kế hoạch tuyển sinh năm học 2024-2025",
-      "internalRecipients": [],
+      "internalRecipients": [
+        "management-staff",
+        "teacher",
+        "staff"
+      ],
       "attachments": [
-        "ke_hoach_tuyen_sinh.pdf"
+        "1744530779335-Bang_tra_no_du_no_giam_dan_36_thang_co_dinh_dang.xlsx",
+        "1744530867857-Bang_tra_no_12_24_thang.xlsx",
+        "1744531858303-Bang_tra_no_12_24_thang.xlsx"
       ],
       "status": "finished",
       "attachmentDetails": [
@@ -325,7 +332,7 @@
       "attachments": [
         "phan_bo_ngan_sach_q3.pdf"
       ],
-      "status": "waiting"
+      "status": "finished"
     },
     {
       "id": "i9j0k1l2-9234-5678-9101-ij123456789e",

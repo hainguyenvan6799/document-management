@@ -225,8 +225,9 @@ router.patch(
 );
 
 function mappingInternalRecipients(internalRecipients, oldInternalRecipients) {
-  if (Array.isArray(internalRecipients) === false || internalRecipients.length === 0) return oldInternalRecipients;
-  return [...oldInternalRecipients, ...internalRecipients];
+  if (!internalRecipients) return oldInternalRecipients;
+  if (Array.isArray(internalRecipients)) return internalRecipients;
+  return [];
 }
 
 function getFilesToDelete(filesToDelete) {

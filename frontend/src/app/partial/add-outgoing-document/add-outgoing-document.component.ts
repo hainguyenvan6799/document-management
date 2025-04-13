@@ -141,7 +141,9 @@ export class AddOutgoingDocumentComponent {
                     resolve(file);
                   },
                   error: () => {
-                    resolve(null);
+                    const nonExistentFile = new File([], fileName);
+                    (nonExistentFile as any).isExistent = false;
+                    resolve(nonExistentFile);
                   },
                 });
             });
@@ -165,7 +167,6 @@ export class AddOutgoingDocumentComponent {
       return this.patchDocument$()
         .pipe(
           mergeMap((data: any) => {
-            console.log({ data }, '1');
             if (data.message === MESSAGE_CODES.VALIDATION_FAILED) {
               this.error.set(data.errors);
               return of(null);
@@ -258,6 +259,7 @@ export class AddOutgoingDocumentComponent {
     const body = new FormData();
     if (!this.files().length) return of(this.body().attachments);
     for (const file of this.files()) {
+      if (!file || (file as any).isExistent === false) continue;
       body.append('attachments', file);
     }
     return this.httpCientService.commonPatch({
@@ -274,6 +276,11 @@ export class AddOutgoingDocumentComponent {
       .subscribe();
   }
   getShortFileName(fileName: string) {
+    const file = this.files().find((file) => file.name === fileName);
+    if (!file || (file as any).isExistent === false)
+      return (
+        getShortFileName(fileName) + ' (Không tìm thấy file trong hệ thống)'
+      );
     return getShortFileName(fileName);
   }
 

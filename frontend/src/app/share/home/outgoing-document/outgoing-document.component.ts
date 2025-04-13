@@ -138,9 +138,6 @@ export class OutgoingDocumentComponent implements OnInit {
   // Signal for highlighting recently finished document
   recentlyFinishedDoc = signal<string | null>(null);
 
-  // Signal for highlighting recently recovered document
-  recentlyRecoveredDoc = signal<string | null>(null);
-
   // Constants
   MOVE_CV = MOVE_CV;
 
@@ -245,11 +242,7 @@ export class OutgoingDocumentComponent implements OnInit {
     this.router.navigate(['add-outgoing-document', document.documentNumber]);
 
     // Highlight document when returning to viewing page
-    if (document.status !== 'waiting') {
-      this.recentlyFinishedDoc.set(document.id);
-    } else {
-      this.recentlyRecoveredDoc.set(document.id);
-    }
+    this.recentlyFinishedDoc.set(document.id);
   }
 
   finishDocument(document: any) {
@@ -466,7 +459,7 @@ export class OutgoingDocumentComponent implements OnInit {
             this.allDocuments.set(newAllDocs);
 
             // Save ID of recently recovered document to highlight it
-            this.recentlyRecoveredDoc.set(document.id);
+            this.recentlyFinishedDoc.set(document.id);
 
             // Update total elements in pagination
             const waitingDocs = newAllDocs.filter(
@@ -616,7 +609,7 @@ export class OutgoingDocumentComponent implements OnInit {
 
       // Set the highlighted document based on its status
       if (doc.status === 'waiting') {
-        this.recentlyRecoveredDoc.set(documentId);
+        this.recentlyFinishedDoc.set(documentId);
 
         // Calculate the page for waiting documents
         const waitingDocs = allDocs.filter((d) => d.status === 'waiting');

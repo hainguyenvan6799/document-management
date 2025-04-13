@@ -96,7 +96,7 @@
       *matRowDef="let row; columns: waitingColumns()"
       [ngClass]="{
         'highlight-row':
-          row.id === recentlyRecoveredDoc() ||
+          row.id === recentlyFinishedDoc() ||
           row.id === documentService.currentAdd()
       }"
       [id]="'doc-' + row.id"
