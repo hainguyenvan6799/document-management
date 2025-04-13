@@ -23,7 +23,7 @@ export class TransferDialogComponent {
   ) {}
   
   onSelectionChange(event: any) {
-    this.selectedRecipients = event.value;
+    this.selectedRecipients = event;
   }
   
   cancel() {

@@ -8,6 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { MatLabel } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { L10nTranslateAsyncPipe } from 'angular-l10n';
 import _ from 'lodash';
@@ -16,6 +17,7 @@ import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { mergeMap, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { CcButtonComponent } from '../../commons/cc-button/cc-button.component';
 import { CcDatePickerComponent } from '../../commons/cc-date-picker/cc-date-picker.component';
 import { CcDropdownComponent } from '../../commons/cc-dropdown/cc-dropdown.component';
 import { CcInputComponent } from '../../commons/cc-input/cc-input.component';
@@ -24,8 +26,6 @@ import { DocumentService } from '../../services/document.service';
 import { HttpClientService } from '../../services/http-client.service';
 import { MESSAGE_CODES, MOVE_CV } from '../../share/constant';
 import { getShortFileName } from '../../utils';
-import { MatIconModule } from '@angular/material/icon';
-import { CcButtonComponent } from '../../commons/cc-button/cc-button.component';
 export type Dropdown = { label: string; value: string | null }[];
 @Component({
   selector: 'app-add-document',
@@ -45,7 +45,6 @@ export type Dropdown = { label: string; value: string | null }[];
   templateUrl: './add-document.component.html',
   styleUrl: './add-document.component.scss',
 })
-
 export class AddDocumentComponent {
   protected messageService: MessageService = inject(MessageService);
   protected httpCientService: HttpClientService = inject(HttpClientService);
@@ -131,24 +130,34 @@ export class AddDocumentComponent {
   }
 
   private async showCustomFileUpload(data: any) {
-    const files = await Promise.all(data.document.attachments.map((fileName: any) => {
-      return new Promise((resolve) => {
-        this.documentService.downloadAttachment$(fileName, 'incoming-document').subscribe({
-          next: (response: any) => resolve(new File([response], fileName, { type: response.type })),
-          error: () => {
-            const nonExistentFile = new File([], fileName);
-            (nonExistentFile as any).isExistent = false;
-            resolve(nonExistentFile);
-          } 
+    const files = await Promise.all(
+      data.document.attachments.map((fileName: any) => {
+        return new Promise((resolve) => {
+          this.documentService
+            .downloadAttachment$(fileName, 'incoming-document')
+            .subscribe({
+              next: (response: any) =>
+                resolve(
+                  new File([response], fileName, { type: response.type })
+                ),
+              error: () => {
+                const nonExistentFile = new File([], fileName);
+                (nonExistentFile as any).isExistent = false;
+                resolve(nonExistentFile);
+              },
+            });
         });
-      });
-    }));
+      })
+    );
     this.files.set(files);
   }
 
   getShortFileName(fileName: string) {
-    const file = this.files().find(file => file.name === fileName);
-    if (!file || (file as any).isExistent === false) return getShortFileName(fileName) + ' (Không tìm thấy file trong hệ thống)';
+    const file = this.files().find((file) => file.name === fileName);
+    if (!file || (file as any).isExistent === false)
+      return (
+        getShortFileName(fileName) + ' (Không tìm thấy file trong hệ thống)'
+      );
     return getShortFileName(fileName);
   }
 
@@ -159,94 +168,127 @@ export class AddDocumentComponent {
     // Remove the file from the uploader
     const currentIndex = uploader.files.indexOf(file);
     uploader.removeUploadedFile(currentIndex);
-    const newFiles = uploader.files.filter((f, index) => index !== currentIndex);
+    const newFiles = uploader.files.filter(
+      (f, index) => index !== currentIndex
+    );
     this.files.set(newFiles);
   }
 
-  onChange(key: string, value: unknown) {
-    console.log(key, value);
+  onChange(key: string, value: any) {
     this.body.update((prev) => {
-      const clonedPrev = _.cloneDeep(prev);
-      _.set(clonedPrev, [key], value);
-      return clonedPrev;
+      const old = _.cloneDeep(prev);
+      _.set(old, [key], value);
+      return old;
     });
   }
-
   save$() {
-    return this.isEditDocument() ? this.saveToUpdate() : this.saveToCreate();
-  }
-
-  private saveToUpdate() {
-    return this.patchDocument$()?.subscribe({
-      next: (data: any) => {
-        if (!data) return;
-        this.documentService.currentAdd.set(data.document.id);
-        this.body.set(this.emptyBody);
-        this.error.set({});
-        this.router.navigateByUrl('');
-      },
-      error: (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: error.message });
-      }
-    });
-  }
-
-  private saveToCreate() {
+    if (this.isEditDocument()) {
+      return this.patchDocument$()
+        .pipe(
+          mergeMap((data: any) => {
+            if (data.message === MESSAGE_CODES.VALIDATION_FAILED) {
+              this.error.set(data.errors);
+              return of(null);
+            }
+            this.documentService.currentAdd.set(data.document.id);
+            const docNumber = data.document.documentNumber;
+            if (!docNumber) return of(null);
+            return this.patchFile$(data.document.documentNumber);
+          })
+        )
+        .subscribe({
+          next: (data) => {
+            if (!data) return;
+            // if (this.filesToDelete().length > 0) {
+            //   this.filesToDelete().forEach((file: string) => {
+            //     this.deleteFiles$(file);
+            //   });
+            // }
+            this.body.set(this.emptyBody);
+            this.error.set({});
+            this.router.navigateByUrl('');
+          },
+        });
+    }
     return this.saveDocument$()
-    .subscribe({
-      next: (data) => {
-        if (!data) return;
-        this.body.set(this.emptyBody);
-        this.error.set({});
-      },
-    });
+      .pipe(
+        mergeMap((data: any) => {
+          if (data.message === MESSAGE_CODES.VALIDATION_FAILED) {
+            this.error.set(data.errors);
+            return of(null);
+          }
+          this.documentService.currentAdd.set(data.document.id);
+          const docNumber = data.document.documentNumber;
+          if (!docNumber) return of(null);
+          return this.patchFile$(data.document.documentNumber);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          if (!data) return;
+          this.body.set(this.emptyBody);
+          this.error.set({});
+          this.files.set([]);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success Message',
+            detail: 'Thêm công văn thành công',
+          });
+        },
+      });
   }
-
   onUpload(event: any) {
     this.files.set(event.currentFiles);
   }
-
   onRemove() {
     this.files.set([]);
     this.filesToDelete.set([]);
   }
-
   cancel() {
     this.router.navigate(['../']);
   }
-
   patchDocument$() {
-    const body = new FormData();
-    for (const file of this.files()) {
-      if (!file || (file as any).isExistent === false) continue;
-      body.append('attachments', file);
-    }
-
-    const jsonBody: any = _.cloneDeep(this.body());
-    for (const key in jsonBody) {
-      if (jsonBody.hasOwnProperty(key)) {
-        body.append(key, jsonBody[key]);
-      }
-    }
-    body.set('status', 'finished');
-    body.set('filesToDelete', this.filesToDelete().length === 0 ? '' : this.filesToDelete().join(', '));
-
     return this.httpCientService.commonPatch({
-      url: `${environment.RESOURCE_URL}/incoming-documents/${this.body().documentNumber}`,
-      body,
+      url: `${environment.RESOURCE_URL}/incoming-documents/${
+        this.body().documentNumber
+      }`,
+      body: {
+        ...this.body(),
+        status: 'finished',
+        filesToDelete: this.filesToDelete()
+      },
     });
   }
-
   saveDocument$() {
     return this.httpCientService.comonPost({
       url: `${environment.RESOURCE_URL}/incoming-documents`,
       body: _.omit(this.body(), 'attachments'),
     });
   }
-
   getDocument() {
-    const documentNumber = this.id();
-    if (!documentNumber) return;
-    return this.documentService.getDocument$({documentNumber});
+    if (!this.id()) return;
+    return this.documentService.getDocument$({
+      documentNumber: this.id() as string,
+    });
+  }
+
+  patchFile$(documentId: string) {
+    const body = new FormData();
+    if (!this.files().length) return of(this.body().attachments);
+    for (const file of this.files()) {
+      body.append('attachments', file);
+    }
+    return this.httpCientService.commonPatch({
+      url: `${environment.RESOURCE_URL}/incoming-documents/${documentId}`,
+      body,
+    });
+  }
+  deleteFiles$(filename: string) {
+    return this.documentService
+      .deleteFile$({
+        documentNumber: this.body().documentNumber as string,
+        filename,
+      })
+      .subscribe();
   }
 }

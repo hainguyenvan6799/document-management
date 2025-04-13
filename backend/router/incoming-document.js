@@ -201,30 +201,37 @@ router.patch(
       return res.status(404).json({ message: 'Document not found' });
     }
 
-    if (req.body.filesToDelete !== "") {
-      const filesToDelete = req.body.filesToDelete.split(',');
+    const filesToDelete = getFilesToDelete(req.body.filesToDelete);
+    if (filesToDelete.length > 0) {
       deleteFiles(filesToDelete);
       documents[documentIndex].attachments = documents[documentIndex].attachments.filter(attachment => !filesToDelete.includes(attachment));
     }
 
-    delete(req.body.filesToDelete);
+    // make sure document not have "filesToDelete" when saving
+    delete (req.body.filesToDelete);
 
     const oldAttachments = documents[documentIndex].attachments;
-    console.log(req.body);
+    const oldInternalRecipients = documents[documentIndex].internalRecipients;
 
     documents[documentIndex] = {
       ...documents[documentIndex],
       ...req.body,
       attachments: req.files ? [...oldAttachments, ...req.files.map(file => file.filename)] : oldAttachments,
-      internalRecipients: req.body.internalRecipients ? req.body.internalRecipients.split(',') : [],
+      internalRecipients: mappingInternalRecipients(req.body.internalRecipients, oldInternalRecipients),
     };
     saveDocuments(documents, true);
     res.status(200).json({ message: 'Document updated successfully', document: documents[documentIndex] });
   }
 );
 
-function getAttachments() {
-  
+function mappingInternalRecipients(internalRecipients, oldInternalRecipients) {
+  if (Array.isArray(internalRecipients) === false || internalRecipients.length === 0) return oldInternalRecipients;
+  return [...oldInternalRecipients, ...internalRecipients];
+}
+
+function getFilesToDelete(filesToDelete) {
+  if (Array.isArray(filesToDelete)) return filesToDelete;
+  return [];
 }
 
 // Download Attachment API

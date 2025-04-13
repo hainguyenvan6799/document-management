@@ -7,25 +7,24 @@ import {
   computed,
   inject,
   signal,
-  Inject,
 } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { L10nTranslateAsyncPipe } from 'angular-l10n';
 import { MessageService } from 'primeng/api';
-import { DocumentService } from '../../../services/document.service';
-import { MOVE_CV } from '../../constant';
-import { RecipientLabelPipe } from '../../pipes/recipient-label.pipe';
 import { ToastModule } from 'primeng/toast';
 import { AttachmentDetail } from '../../../commons/constants';
-import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { getShortFileName } from '../../../utils';
 import { TransferDialogComponent } from '../../../partial/transfer-dialog/transfer-dialog.component';
+import { DocumentService } from '../../../services/document.service';
+import { getShortFileName } from '../../../utils';
+import { MOVE_CV } from '../../constant';
+import { RecipientLabelPipe } from '../../pipes/recipient-label.pipe';
 
 type TransferDialogResult = {
-  selectedRecipients: Array<"staff" | "staff-management" | "teacher">;
-}
+  selectedRecipients: Array<'staff' | 'staff-management' | 'teacher'>;
+};
 
 @Component({
   selector: 'app-incoming-document',
@@ -201,15 +200,22 @@ export class IncomingDocumentComponent implements OnInit {
       ...document,
       attachmentDetails: attachmentData,
       internalRecipientLabels: this.mappingLabelsForInternalRecipient(document),
-    }
+    };
   }
 
   private mappingLabelsForInternalRecipient(document: any) {
-    const selectedRecipientLabels = this.recipientOptions.filter((recipient) => document.internalRecipients.includes(recipient.value)).map((recipient) => recipient.label);
+    if (!document.internalRecipients) return '';
+    const selectedRecipientLabels = this.recipientOptions
+      .filter((recipient) =>
+        document.internalRecipients.includes(recipient.value)
+      )
+      .map((recipient) => recipient.label);
     return selectedRecipientLabels.join(', ');
   }
 
-  private async getAttachmentUrls(attachments: string[] | undefined): Promise<AttachmentDetail[]> {
+  private async getAttachmentUrls(
+    attachments: string[] | undefined
+  ): Promise<AttachmentDetail[]> {
     if (!attachments) return [];
 
     try {
@@ -223,8 +229,8 @@ export class IncomingDocumentComponent implements OnInit {
                 resolve({ fileName: attachment, fileUrl: url });
               },
               error: () => {
-                resolve({fileName: attachment, fileUrl: ''});
-              }
+                resolve({ fileName: attachment, fileUrl: '' });
+              },
             });
         });
       });
@@ -356,7 +362,12 @@ export class IncomingDocumentComponent implements OnInit {
     if (docIndex === -1) return;
 
     // Change status from "waiting" to "finished"
-    const updatedDoc = { ...allDocs[docIndex], status: 'finished', internalRecipientLabels: this.mappingLabelsForInternalRecipient(document) };
+    const updatedDoc = {
+      ...allDocs[docIndex],
+      ...document,
+      status: 'finished',
+      internalRecipientLabels: this.mappingLabelsForInternalRecipient(document),
+    };
 
     // Update allDocuments array with modified document
     const newAllDocs = [...allDocs];
@@ -467,48 +478,56 @@ export class IncomingDocumentComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
 
-    const remainingInternalRecipients = this.recipientOptions.filter((option: {label: string, value: string}) => !document.internalRecipients.includes(option.value));
-    
+    const remainingInternalRecipients = this.recipientOptions.filter(
+      (option: { label: string; value: string }) =>
+        !document.internalRecipients.includes(option.value)
+    );
+
     const dialogConfig = new MatDialogConfig();
     const buttonElement = event.target as HTMLElement;
     const buttonRect = buttonElement.getBoundingClientRect();
-    
+
     // Calculate position to the left of the button
-    dialogConfig.position = { 
+    dialogConfig.position = {
       top: `${buttonRect.top}px`,
-      left: `${buttonRect.left - 320}px` // 300px width + 20px margin
+      left: `${buttonRect.left - 320}px`, // 300px width + 20px margin
     };
     dialogConfig.width = '300px';
     dialogConfig.panelClass = 'transfer-dialog';
     dialogConfig.data = {
       document,
-      recipientOptions: remainingInternalRecipients
+      recipientOptions: remainingInternalRecipients,
     };
-    
+
     const dialogRef = this.dialog.open(TransferDialogComponent, dialogConfig);
-    
+
     dialogRef.afterClosed().subscribe((result: TransferDialogResult) => {
-      this.documentService.updateDocument(
-        document.documentNumber,
-        {
-          status: 'finished',
-          internalRecipients: [...document.internalRecipients, ...result.selectedRecipients],
-        },
-        true
-      ).subscribe({
-        next: (response: any) => {
-          this.updateUIAfterTransfer(response.document);
-        },
-        error: (error: any) => {
-          console.error('Lỗi khi cập nhật văn bản:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Lỗi',
-            detail: 'Không thể cập nhật văn bản. Vui lòng thử lại sau.',
-          });
-        },
-      });
+      this.documentService
+        .updateDocument(
+          document.documentNumber,
+          {
+            status: 'finished',
+            internalRecipients: [
+              ...document.internalRecipients,
+              ...result.selectedRecipients,
+            ],
+          },
+          true
+        )
+        .subscribe({
+          next: (response: any) => {
+            console.log(response.document, 899);
+            this.updateUIAfterTransfer(response.document);
+          },
+          error: (error: any) => {
+            console.error('Lỗi khi cập nhật văn bản:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Lỗi',
+              detail: 'Không thể cập nhật văn bản. Vui lòng thử lại sau.',
+            });
+          },
+        });
     });
   }
 }
-
