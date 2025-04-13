@@ -128,7 +128,7 @@ router.patch(
   }
 );
 
-router.get('/:documentNumber', (req, res) => {
+router.get('/detail/:documentNumber', (req, res) => {
   const { documentNumber } = req.params;
   const documents = loadIncomingDocuments();
   const document = documents.find(doc => doc.documentNumber === documentNumber);

@@ -114,7 +114,7 @@ export class DocumentService {
       ? 'incoming-documents'
       : 'outgoing-documents';
     return this.httpClientService.comonGet({
-      url: `${environment.RESOURCE_URL}/${documentType}/${documentNumber}`,
+      url: `${environment.RESOURCE_URL}/${documentType}/detail/${documentNumber}`,
     });
   }
 }
