@@ -25,6 +25,7 @@ import { HttpClientService } from '../../services/http-client.service';
 import { MOVE_CV } from '../constant';
 import { IncomingDocumentComponent } from './incoming-document/incoming-document.component';
 import { OutgoingDocumentComponent } from './outgoing-document/outgoing-document.component';
+import { DocumentStateService } from '../../services/document-state.service';
 
 @Component({
   selector: 'app-home',
@@ -49,14 +50,15 @@ export class HomeComponent implements OnInit {
   protected router = inject(Router);
   protected documentService = inject(DocumentService);
   protected dialog = inject(MatDialog);
+  protected documentStateService = inject(DocumentStateService);
 
   // Toggle for incoming/outgoing documents
-  value = signal('outcomingDocuments');
+  value = this.documentStateService.currentTab;
   listToggle = signal([
     {
       label: 'incomingDocuments',
     },
-    { label: 'outcomingDocuments' },
+    { label: 'outgoingDocuments' },
   ]);
 
   // Constants
@@ -81,7 +83,7 @@ export class HomeComponent implements OnInit {
 
     // Nếu có tham số 'documentType' và giá trị là 'outgoing', chuyển đến tab outgoing-documents
     if (queryParams['documentType'] === 'outgoing') {
-      this.value.set('outcomingDocuments');
+      this.documentStateService.setCurrentTab('outgoingDocuments');
     }
   }
 
@@ -98,7 +100,7 @@ export class HomeComponent implements OnInit {
   }
 
   onChangeToggle(value: string): void {
-    this.value.set(value);
+    this.documentStateService.setCurrentTab(value as 'incomingDocuments' | 'outgoingDocuments');
   }
 
   openDialog(document: any) {

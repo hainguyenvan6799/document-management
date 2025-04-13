@@ -27,6 +27,7 @@ import { HttpClientService } from '../../services/http-client.service';
 import { MESSAGE_CODES, MOVE_CV } from '../../share/constant';
 import { getShortFileName } from '../../utils';
 import { Dropdown } from '../add-document/add-document.component';
+import { DocumentStateService } from '../../services/document-state.service';
 @Component({
   selector: 'app-add-outgoing-document',
   imports: [
@@ -51,6 +52,7 @@ export class AddOutgoingDocumentComponent {
   protected router: Router = inject(Router);
   protected documentService = inject(DocumentService);
   protected route: ActivatedRoute = inject(ActivatedRoute);
+  protected documentStateService = inject(DocumentStateService);
   emptyBody = {
     issuedDate: '',
     referenceNumber: '',
@@ -188,7 +190,9 @@ export class AddOutgoingDocumentComponent {
             // }
             this.body.set(this.emptyBody);
             this.error.set({});
-            this.router.navigateByUrl('');
+            this.documentStateService.setCurrentTab('outgoingDocuments');
+            this.router.navigate(['']);
+
           },
         });
     }

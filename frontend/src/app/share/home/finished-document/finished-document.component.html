@@ -111,7 +111,7 @@
     *matRowDef="let row; columns: columns"
     [ngClass]="{
       'highlight-row':
-        row.id === recentlyFinishedDocId ||
+        row.id === recentlyFinishedDoc() ||
         row.id === documentService.currentAdd()
     }"
     [id]="'doc-' + row.id"

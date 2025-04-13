@@ -20,7 +20,7 @@
   "process": "Xử lý",
   "addDocument": "Tạo công văn",
   "incomingDocuments": "Công văn đến",
-  "outcomingDocuments": "Công văn đi",
+  "outgoingDocuments": "Công văn đi",
   "dateRelease": "Ngày phát hành văn bản",
   "internalRecipient": "Nơi nhận nội bộ",
   "priority_normal": "Thường",

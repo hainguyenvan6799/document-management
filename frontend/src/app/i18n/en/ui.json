@@ -23,7 +23,7 @@
   "process": "Process",
   "addDocument": "Add Document",
   "incomingDocuments": "Incoming Documents",
-  "outcomingDocuments": "Outgoing Documents",
+  "outgoingDocuments": "Outgoing Documents",
   "dateRelease": "Release Date",
   "internalRecipient": "Internal Recipient",
   "paginatorFirstPage": "First page",

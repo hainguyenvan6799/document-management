@@ -334,12 +334,6 @@ export class IncomingDocumentComponent implements OnInit {
               this.finishedCurrentPage.set(targetPage);
             }
           }
-
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Thành công',
-            detail: `Đã kết thúc văn bản số ${document.documentNumber}`,
-          });
         },
         error: (error) => {
           console.error('Lỗi khi cập nhật trạng thái:', error);

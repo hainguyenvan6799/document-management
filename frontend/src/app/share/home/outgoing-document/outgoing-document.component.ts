@@ -239,10 +239,8 @@ export class OutgoingDocumentComponent implements OnInit {
   }
 
   returnDocument(document: any) {
+    this.resetHighlight();
     this.router.navigate(['add-outgoing-document', document.documentNumber]);
-
-    // Highlight document when returning to viewing page
-    this.recentlyFinishedDoc.set(document.id);
   }
 
   finishDocument(document: any) {
@@ -304,12 +302,6 @@ export class OutgoingDocumentComponent implements OnInit {
               this.finishedCurrentPage.set(targetPage);
             }
           }
-
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Thành công',
-            detail: `Đã kết thúc văn bản số ${document.documentNumber}`,
-          });
         },
         error: (error) => {
           console.error('Lỗi khi cập nhật trạng thái:', error);
@@ -670,6 +662,8 @@ export class OutgoingDocumentComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
 
+    this.recentlyFinishedDoc.set(null);
+
     const remainingInternalRecipients = this.recipientOptions.filter(
       (option: { label: string; value: string }) =>
         !document.internalRecipients.includes(option.value)
@@ -731,6 +725,8 @@ export class OutgoingDocumentComponent implements OnInit {
 
     if (docIndex === -1) return;
 
+    this.resetHighlight();
+
     // Change status from "waiting" to "finished"
     const updatedDoc = {
       ...allDocs[docIndex],
@@ -790,5 +786,10 @@ export class OutgoingDocumentComponent implements OnInit {
       )
       .map((recipient) => recipient.label);
     return selectedRecipientLabels.join(', ');
+  }
+
+  private resetHighlight() {
+    this.recentlyFinishedDoc.set(null);
+    this.documentService.currentAdd.set('');
   }
 }
