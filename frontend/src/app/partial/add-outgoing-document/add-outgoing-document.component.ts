@@ -218,6 +218,7 @@ export class AddOutgoingDocumentComponent {
     if (!this.id()) return;
     return this.documentService.getDocument$({
       documentNumber: this.id() as string,
+      isIncoming: false,
     });
   }
 

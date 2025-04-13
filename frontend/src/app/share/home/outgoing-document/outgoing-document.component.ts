@@ -18,6 +18,12 @@ import { DocumentService } from '../../../services/document.service';
 import { MOVE_CV } from '../../constant';
 import { RecipientLabelPipe } from '../../pipes/recipient-label.pipe';
 import { getShortFileName } from '../../../utils';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { TransferDialogComponent } from '../../../partial/transfer-dialog/transfer-dialog.component';
+
+type TransferDialogResult = {
+  selectedRecipients: Array<'staff' | 'staff-management' | 'teacher'>;
+};
 
 @Component({
   selector: 'app-outgoing-document',
@@ -37,6 +43,7 @@ export class OutgoingDocumentComponent implements OnInit {
   protected router: Router = inject(Router);
   protected documentService = inject(DocumentService);
   protected messageService = inject(MessageService);
+  protected dialog = inject(MatDialog);
 
   showNoAttachmentsMessage = signal<boolean>(false);
 
@@ -63,6 +70,7 @@ export class OutgoingDocumentComponent implements OnInit {
     const filtered = this.allDocuments().filter(
       (doc) => doc.status !== 'waiting'
     );
+
     return filtered.sort((a, b) => {
       const numA =
         typeof a.documentNumber === 'string'
@@ -88,6 +96,13 @@ export class OutgoingDocumentComponent implements OnInit {
     const startIndex = this.finishedCurrentPage() * this.finishedPageSize();
     return filteredDocs.slice(startIndex, startIndex + this.finishedPageSize());
   });
+
+  // Recipient options for the select component
+  recipientOptions = [
+    { label: 'Nhân viên', value: 'staff' },
+    { label: 'CBQL', value: 'management-staff' },
+    { label: 'Giáo viên', value: 'teacher' },
+  ];
 
   // Columns for outgoing documents - different columns from incoming
   waitingColumns = signal([
@@ -183,6 +198,7 @@ export class OutgoingDocumentComponent implements OnInit {
     return {
       ...document,
       attachmentDetails: attachmentData,
+      internalRecipientLabels: this.mappingLabelsForInternalRecipient(document),
     };
   }
 
@@ -655,5 +671,131 @@ export class OutgoingDocumentComponent implements OnInit {
         }
       }
     }, 300);
+  }
+
+  openTransferDialog(event: MouseEvent, document: any) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const remainingInternalRecipients = this.recipientOptions.filter(
+      (option: { label: string; value: string }) =>
+        !document.internalRecipients.includes(option.value)
+    );
+
+    const dialogConfig = new MatDialogConfig();
+    const buttonElement = event.target as HTMLElement;
+    const buttonRect = buttonElement.getBoundingClientRect();
+
+    // Calculate position to the left of the button
+    dialogConfig.position = {
+      top: `${buttonRect.top}px`,
+      left: `${buttonRect.left - 320}px`, // 300px width + 20px margin
+    };
+    dialogConfig.width = '300px';
+    dialogConfig.panelClass = 'transfer-dialog';
+    dialogConfig.data = {
+      document,
+      recipientOptions: remainingInternalRecipients,
+    };
+
+    const dialogRef = this.dialog.open(TransferDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: TransferDialogResult | undefined) => {
+      if (!result) return;
+      this.documentService
+        .updateDocument(
+          document.documentNumber,
+          {
+            status: 'finished',
+            internalRecipients: [
+              ...document.internalRecipients,
+              ...result.selectedRecipients,
+            ],
+          },
+          false
+        )
+        .subscribe({
+          next: (response: any) => {
+            console.log(response.document, 899);
+            this.updateUIAfterTransfer(response.document);
+          },
+          error: (error: any) => {
+            console.error('Lỗi khi cập nhật văn bản:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Lỗi',
+              detail: 'Không thể cập nhật văn bản. Vui lòng thử lại sau.',
+            });
+          },
+        });
+    });
+  }
+
+  updateUIAfterTransfer(document: any) {
+    if (!document) return;
+    const allDocs = this.allDocuments();
+    const docIndex = allDocs.findIndex((doc) => doc.id === document.id);
+
+    if (docIndex === -1) return;
+
+    // Change status from "waiting" to "finished"
+    const updatedDoc = {
+      ...allDocs[docIndex],
+      ...document,
+      status: 'finished',
+      internalRecipientLabels: this.mappingLabelsForInternalRecipient(document),
+    };
+
+    // Update allDocuments array with modified document
+    const newAllDocs = [...allDocs];
+    newAllDocs[docIndex] = updatedDoc;
+
+    // Assign new array to allDocuments signal
+    this.allDocuments.set(newAllDocs);
+
+    // Save ID of recently transferred document to highlight it
+    this.recentlyFinishedDoc.set(document.id);
+
+    // Update total elements in pagination
+    const waitingDocs = newAllDocs.filter((doc) => doc.status === 'waiting');
+    const finishedDocs = newAllDocs.filter((doc) => doc.status !== 'waiting');
+    this.waitingTotalItems.set(waitingDocs.length);
+    this.finishedTotalItems.set(finishedDocs.length);
+
+    // Find document in sorted list of finished documents
+    const sortedFinishedDocs = finishedDocs.sort((a, b) => {
+      const numA =
+        typeof a.documentNumber === 'string'
+          ? parseInt(a.documentNumber.replace(/\D/g, ''))
+          : a.documentNumber;
+      const numB =
+        typeof b.documentNumber === 'string'
+          ? parseInt(b.documentNumber.replace(/\D/g, ''))
+          : b.documentNumber;
+      return numA - numB;
+    });
+
+    // Find position of document in sorted list
+    const docPositionInSorted = sortedFinishedDocs.findIndex(
+      (doc) => doc.id === document.id
+    );
+
+    // Calculate page containing document according to page size
+    if (docPositionInSorted !== -1) {
+      const targetPage = Math.floor(
+        docPositionInSorted / this.finishedPageSize()
+      );
+      this.finishedCurrentPage.set(targetPage);
+    }
+  }
+
+  private mappingLabelsForInternalRecipient(document: any) {
+    if (!document.internalRecipients) return '';
+    const selectedRecipientLabels = this.recipientOptions
+      .filter((recipient) =>
+        document.internalRecipients.includes(recipient.value)
+      )
+      .map((recipient) => recipient.label);
+    return selectedRecipientLabels.join(', ');
   }
 }

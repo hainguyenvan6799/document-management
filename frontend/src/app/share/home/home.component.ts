@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
   protected dialog = inject(MatDialog);
 
   // Toggle for incoming/outgoing documents
-  value = signal('incomingDocuments');
+  value = signal('outcomingDocuments');
   listToggle = signal([
     {
       label: 'incomingDocuments',

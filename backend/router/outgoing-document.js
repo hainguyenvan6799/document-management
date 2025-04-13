@@ -187,6 +187,8 @@ router.patch(
       return res.status(404).json({ message: 'Document not found' });
     }
 
+    const oldInternalRecipients = documents[documentIndex].internalRecipients;
+
     documents[documentIndex] = {
       ...documents[documentIndex],
       ...req.body,
@@ -195,13 +197,19 @@ router.patch(
           ...documents[documentIndex].attachments,
           ...req.files.map(file => file.filename),
         ]
-        : documents[documentIndex].attachments
+        : documents[documentIndex].attachments,
+      internalRecipients: mappingInternalRecipients(req.body.internalRecipients, oldInternalRecipients),
     };
 
     saveDocuments(documents, false);
     res.status(200).json({ message: 'Document updated successfully', document: documents[documentIndex] });
   }
 );
+
+function mappingInternalRecipients(internalRecipients, oldInternalRecipients) {
+  if (Array.isArray(internalRecipients) === false || internalRecipients.length === 0) return oldInternalRecipients;
+  return [...oldInternalRecipients, ...internalRecipients];
+}
 
 // Download Attachment API
 router.get('/attachments/:filename', (req, res) => {
