@@ -113,7 +113,7 @@ router.post(
     res.status(201).json({ message: 'Document created successfully', document: newDocument });
   }
 );
-router.get('/:documentNumber', (req, res) => {
+router.get('/detail/:documentNumber', (req, res) => {
   const { documentNumber } = req.params;
   const documents = loadOutgoingDocuments();
   const document = documents.find(doc => doc.documentNumber === documentNumber);
