@@ -190,6 +190,22 @@ router.patch(
       .withMessage({ code: ERROR_CODES.INVALID_STATUS, message: 'Invalid status' }),
     body('internalRecipients')
       .optional()
+    // .default([])
+    // .isArray()
+    // .withMessage({ code: ERROR_CODES.INVALID_RECIPIENTS, message: 'Internal recipients must be an array' })
+    // .custom((value) => {
+    //   const validValues = ['staff', 'management-staff', 'teacher'];
+    //   // Kiểm tra xem tất cả các giá trị trong mảng có hợp lệ không
+    //   const allValid = value.every(recipient => validValues.includes(recipient));
+    //   if (!allValid) {
+    //     throw new Error('Invalid recipient values');
+    //   }
+    //   return true;
+    // })
+    // .withMessage({
+    //   code: ERROR_CODES.INVALID_RECIPIENT_VALUES,
+    //   message: 'Internal recipients must only contain: staff, management-staff, teacher'
+    // }),
   ],
   handleValidationErrors,
   (req, res) => {
@@ -201,13 +217,14 @@ router.patch(
       return res.status(404).json({ message: 'Document not found' });
     }
 
-    if (req.body.filesToDelete !== "") {
+    const fileToDelete = req.body.filesToDelete ?? '';
+    if (fileToDelete !== "") {
       const filesToDelete = req.body.filesToDelete.split(',');
       deleteFiles(filesToDelete);
       documents[documentIndex].attachments = documents[documentIndex].attachments.filter(attachment => !filesToDelete.includes(attachment));
     }
 
-    delete(req.body.filesToDelete);
+    delete (req.body.filesToDelete);
 
     const oldAttachments = documents[documentIndex].attachments;
     console.log(req.body);
@@ -216,7 +233,7 @@ router.patch(
       ...documents[documentIndex],
       ...req.body,
       attachments: req.files ? [...oldAttachments, ...req.files.map(file => file.filename)] : oldAttachments,
-      internalRecipients: req.body.internalRecipients ? req.body.internalRecipients.split(',') : [],
+      internalRecipients: req.body.internalRecipients,
     };
     saveDocuments(documents, true);
     res.status(200).json({ message: 'Document updated successfully', document: documents[documentIndex] });
@@ -224,7 +241,6 @@ router.patch(
 );
 
 function getAttachments() {
-  
 }
 
 // Download Attachment API
